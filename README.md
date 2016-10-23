@@ -1,5 +1,7 @@
 # Blacklabelops Volumerize
 
+[![Docker Stars](https://img.shields.io/docker/stars/blacklabelops/volumerize.svg)](https://hub.docker.com/r/blacklabelops/volumerize/) [![Docker Pulls](https://img.shields.io/docker/pulls/blacklabelops/volumerize.svg)](https://hub.docker.com/r/blacklabelops/volumerize/)
+
 Blacklabelops backup and restore solution for Docker volume backups. It is based on the command line tool Duplicity. Dockerized and Parameterized for easier use and configuration.
 
 Always remember that this no wizard tool that can clone and backup data from running databases. You should always stop all containers running on your data before doing backups. Always make sure your not victim of unexpected data corruption.
