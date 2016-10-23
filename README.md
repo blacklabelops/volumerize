@@ -6,6 +6,14 @@ Always remember that this no wizard tool that can clone and backup data from run
 
 Also note that the easier the tools the easier it is to lose data! Always make sure the tool works correct by checking the backup data itself, e.g. S3 bucket. Check the configuration double time and enable some check options this image offers. E.g. attaching volumes read only.
 
+> Note: Tutorials and examples for several backups are still in work.
+
+Features:
+
+* Multiple Backends
+* Cron Schedule
+* Start and Stop Containers
+
 Supported backends:
 
 * Filesystem
@@ -210,7 +218,7 @@ $ docker run -d \
     blacklabelops/volumerize
 ~~~~
 
-> The startup routine will not be applied to all scripts, just: backup, restore and periodBackup.
+> The startup routine will be applied to the following scripts: backup, backupFull, restore and periodBackup.
 
 Test the routine!
 
@@ -250,6 +258,8 @@ This image creates at container startup some convenience scripts.
 | verify | Compare the latest backup to your local files |
 | restore | Be Careful! Triggers an immediate force restore with the latest backup |
 | periodicBackup | Same script that will be triggered by the periodic schedule |
+| startContainers | Starts the specified Docker containers |
+| stopContainers | Stops the specified Docker containers |
 
 Example triggering script inside running container:
 
