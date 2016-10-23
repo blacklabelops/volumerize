@@ -13,7 +13,12 @@ RUN apk upgrade --update && \
     mkdir -p /opt/volumerize && \
     mkdir -p /etc/volumerize && \
     touch /etc/volumerize/backup && \
-    chmod +x /etc/volumerize/backup && \
+    touch /etc/volumerize/backupFull && \
+    touch /etc/volumerize/restore && \
+    touch /etc/volumerize/periodicBackup && \
+    touch /etc/volumerize/verify && \
+    chmod +x /etc/volumerize/backup /etc/volumerize/backupFull /etc/volumerize/restore \
+      /etc/volumerize/periodicBackup /etc/volumerize/verify && \
     # Install Jobber
     export JOBBER_HOME=/tmp/jobber && \
     export JOBBER_LIB=$JOBBER_HOME/lib && \

@@ -1,8 +1,10 @@
 # Blacklabelops Volumerize
 
-Blacklabelops backup solution for Docker volume backups. It is based on the command line tool Duplicity. Dockerized and Parameterized for easier use and configuration.
+Blacklabelops backup and restore solution for Docker volume backups. It is based on the command line tool Duplicity. Dockerized and Parameterized for easier use and configuration.
 
 Always remember that this no wizard tool that can clone and backup data from running databases. You should always stop all containers running on your data before doing backups. Always make sure your not victim of unexpected data corruption.
+
+Also note that the easier the tools are the easier it is to lose data! Always make sure the tool works correct by checking the backup data itself, e.g. S3 bucket. Check the configuration double time and enable some check options this image offers. E.g. attaching volumes read only.
 
 Supported backends:
 
@@ -98,6 +100,86 @@ $ docker run -d \
 ~~~~
 
 > Will run Volumerize on the common parent folder `/source`.
+
+# Backup Restore
+
+A restore is simple. First stop your Volumerize container and start a another container with the same
+environment variables and the same volume but without read only mode! This is important in order to get the same directory structure as when you did your backup!
+
+Tip: Now add the read only option to your backup container!
+
+Example:
+
+You did your backups with the following settings:
+
+~~~~
+$ docker run -d \
+    --name volumerize \
+    -v jenkins_volume:/source:ro \
+    -v backup_volume:/backup \
+    -e "VOLUMERIZE_SOURCE=/source" \
+    -e "VOLUMERIZE_TARGET=file:///backup" \
+    blacklabelops/volumerize
+~~~~
+
+Then stop the backup container and restore with the following command. The only difference is that we exclude the read only option `:ro` from the source volume and added it to the backup volume:
+
+~~~~
+$ docker stop volumerize
+$ docker run --rm \
+    -v jenkins_volume:/source \
+    -v backup_volume:/backup:ro \
+    -e "VOLUMERIZE_SOURCE=/source" \
+    -e "VOLUMERIZE_TARGET=file:///backup" \
+    blacklabelops/volumerize restore
+$ docker start volumerize
+~~~~
+
+> Triggers a once time restore. The container for executing the restore command will be deleted afterwards
+
+# Periodic Backups
+
+The default cron setting for this container is: `0 0 4 * * *`. That's four a clock in the morning UTC. You can set your own schedule with the environment variable `VOLUMERIZE_JOBBER_TIME`.
+
+You can set the time zone with the environment variable `TZ`.
+
+The syntax is different from cron because I use Jobber as a cron tool: [Jobber Time Strings](http://dshearer.github.io/jobber/doc/v1.1/#/time-strings)
+
+Example:
+
+~~~~
+$ docker run -d \
+    --name volumerize \
+    -v jenkins_volume:/source:ro \
+    -v backup_volume:/backup \
+    -e "TZ=Europe/Berlin"
+    -e "VOLUMERIZE_SOURCE=/source" \
+    -e "VOLUMERIZE_TARGET=file:///backup" \
+    -e "VOLUMERIZE_JOBBER_TIME=0 0 3 * * *" \
+    blacklabelops/volumerize
+~~~~
+
+> Backups three o'clock in the morning according to german local time.
+
+# Container Scripts
+
+This image creates at container startup some convenience scripts.
+
+| Script | Description |
+|--------|-------------|
+| backup | Creates an incremental backup with the containers configuration |
+| backupFull | Creates a full backup the the containers configuration |
+| verify | Compare the latest backup to your local files |
+| restore | Be Careful! Triggers an immediate force restore with the latest backup |
+| periodicBackup | Same script that will be triggered by the periodic schedule |
+
+Example triggering script inside running container:
+
+~~~~
+$ docker exec volumerize backup
+~~~~
+
+> Executes script `backup` inside container with name `volumerize`
 
 # Build The Project
 

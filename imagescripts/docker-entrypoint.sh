@@ -10,7 +10,7 @@ if [ -n "${VOLUMERIZE_DELAYED_START}" ]; then
 fi
 
 if [ -n "${VOLUMERIZE_SOURCE}" ]; then
-  source $CUR_DIR/create_backup.sh
+  source $CUR_DIR/create_scripts.sh
   source $CUR_DIR/create_jobber.sh
 fi
 

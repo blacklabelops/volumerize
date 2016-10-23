@@ -8,5 +8,5 @@ node {
   stage 'Build Images'
   parallel("image-alpine": { load './buildscripts/buildImage.groovy' })
   stage 'Test Images'
-  parallel("image-alpine": { load './buildscripts/alpineTestImages.groovy' })
+  parallel("image-alpine": { load './buildscripts/testImage.groovy' })
 }
