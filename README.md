@@ -4,7 +4,7 @@ Blacklabelops backup and restore solution for Docker volume backups. It is based
 
 Always remember that this no wizard tool that can clone and backup data from running databases. You should always stop all containers running on your data before doing backups. Always make sure your not victim of unexpected data corruption.
 
-Also note that the easier the tools are the easier it is to lose data! Always make sure the tool works correct by checking the backup data itself, e.g. S3 bucket. Check the configuration double time and enable some check options this image offers. E.g. attaching volumes read only.
+Also note that the easier the tools the easier it is to lose data! Always make sure the tool works correct by checking the backup data itself, e.g. S3 bucket. Check the configuration double time and enable some check options this image offers. E.g. attaching volumes read only.
 
 Supported backends:
 
@@ -137,6 +137,30 @@ $ docker start volumerize
 
 > Triggers a once time restore. The container for executing the restore command will be deleted afterwards
 
+## Dry run
+
+You can pass the `--dry-run` parameter to the restore command in order to test the restore functionality beforehand:
+
+~~~~
+$ docker run --rm \
+    -v jenkins_volume:/source \
+    -v backup_volume:/backup:ro \
+    -e "VOLUMERIZE_SOURCE=/source" \
+    -e "VOLUMERIZE_TARGET=file:///backup" \
+    blacklabelops/volumerize restore --dry-run
+~~~~
+
+But in order to see the differences between backup and source you need the verify command:
+
+~~~~
+$ docker run --rm \
+    -v jenkins_volume:/source \
+    -v backup_volume:/backup:ro \
+    -e "VOLUMERIZE_SOURCE=/source" \
+    -e "VOLUMERIZE_TARGET=file:///backup" \
+    blacklabelops/volumerize verify
+~~~~
+
 # Periodic Backups
 
 The default cron setting for this container is: `0 0 4 * * *`. That's four a clock in the morning UTC. You can set your own schedule with the environment variable `VOLUMERIZE_JOBBER_TIME`.
@@ -161,6 +185,27 @@ $ docker run -d \
 
 > Backups three o'clock in the morning according to german local time.
 
+# Duplicity Parameters
+
+You can pass duplicity options inside volumerize. Duplicity options will be passed by the environment-variable `VOLUMERIZE_DUPLICITY_OPTIONS`. The options will be added to all blacklabelops/volumerize commands and scripts. E.g. the option `--dry-run` will put the whole container in demo mode as all duplicity commands will only be simulated.
+
+Under the hood blacklabelops/volumerize uses duplicity. See here for duplicity command line options: [Duplicity CLI Options](http://duplicity.nongnu.org/duplicity.1.html#sect5)
+
+Example:
+
+~~~~
+$ docker run -d \
+    --name volumerize \
+    -v jenkins_volume:/source:ro \
+    -v backup_volume:/backup \
+    -e "VOLUMERIZE_SOURCE=/source" \
+    -e "VOLUMERIZE_TARGET=file:///backup" \
+    -e "VOLUMERIZE_DUPLICITY_OPTIONS=--dry-run" \
+    blacklabelops/volumerize
+~~~~
+
+> Will only operate in dry-run simulation mode.
+
 # Container Scripts
 
 This image creates at container startup some convenience scripts.
@@ -180,6 +225,18 @@ $ docker exec volumerize backup
 ~~~~
 
 > Executes script `backup` inside container with name `volumerize`
+
+Passing script parameters:
+
+Under the hood blacklabelops/volumerize uses duplicity. See here for duplicity command line options: [Duplicity CLI Options](http://duplicity.nongnu.org/duplicity.1.html#sect5)
+
+Example:
+
+~~~~
+$ docker exec volumerize backup --dry-run
+~~~~
+
+> `--dry-run` will simulate not execute the backup procedure.
 
 # Build The Project
 

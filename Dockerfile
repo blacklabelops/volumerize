@@ -10,13 +10,9 @@ RUN apk upgrade --update && \
       then apk add duplicity ; \
       else apk add "duplicity=${DUPLICITY_VERSION}" ; \
     fi && \
-    mkdir -p /opt/volumerize && \
-    mkdir -p /etc/volumerize && \
-    touch /etc/volumerize/backup && \
-    touch /etc/volumerize/backupFull && \
-    touch /etc/volumerize/restore && \
-    touch /etc/volumerize/periodicBackup && \
-    touch /etc/volumerize/verify && \
+    mkdir -p /etc/volumerize /volumerize-cache /opt/volumerize && \
+    touch /etc/volumerize/backup /etc/volumerize/backupFull /etc/volumerize/restore \
+      /etc/volumerize/periodicBackup /etc/volumerize/verify && \
     chmod +x /etc/volumerize/backup /etc/volumerize/backupFull /etc/volumerize/restore \
       /etc/volumerize/periodicBackup /etc/volumerize/verify && \
     # Install Jobber
@@ -67,10 +63,12 @@ RUN apk upgrade --update && \
     rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
 ENV VOLUMERIZE_HOME=/etc/volumerize \
+    VOLUMERIZE_CACHE=/volumerize-cache \
     PATH=$PATH:/etc/volumerize
 
 USER root
 WORKDIR /etc/volumerize
+VOLUME ["/volumerize-cache"]
 COPY imagescripts/*.sh /opt/volumerize/
 ENTRYPOINT ["/bin/tini","--","/opt/volumerize/docker-entrypoint.sh"]
 CMD ["volumerize"]

@@ -13,7 +13,10 @@ DUPLICITY_TARGET=${VOLUMERIZE_TARGET}
 DUPLICITY_MODE=""
 
 function resolveOptions() {
-  DUPLICITY_OPTIONS="--no-encryption --allow-source-mismatch"
+  DUPLICITY_OPTIONS="--no-encryption --allow-source-mismatch --archive-dir=${VOLUMERIZE_CACHE}"
+  if [ -n "${VOLUMERIZE_DUPLICITY_OPTIONS}" ]; then
+    DUPLICITY_OPTIONS=$DUPLICITY_OPTIONS" "${VOLUMERIZE_DUPLICITY_OPTIONS}
+  fi
 }
 
 function resolveIncludes() {
