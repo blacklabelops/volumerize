@@ -2,7 +2,8 @@ FROM blacklabelops/alpine:3.4
 MAINTAINER Steffen Bleul <sbl@blacklabelops.com>
 
 ARG DUPLICITY_VERSION=latest
-ARG JOBBER_VERSION=latest
+ARG JOBBER_VERSION=1.1
+ARG DOCKER_VERSION=1.12.2
 
 RUN apk upgrade --update && \
     # Install Duplicity
@@ -11,9 +12,11 @@ RUN apk upgrade --update && \
       else apk add "duplicity=${DUPLICITY_VERSION}" ; \
     fi && \
     mkdir -p /etc/volumerize /volumerize-cache /opt/volumerize && \
-    touch /etc/volumerize/backup /etc/volumerize/backupFull /etc/volumerize/restore \
+    touch /etc/volumerize/startContainers /etc/volumerize/stopContainers \
+      /etc/volumerize/backup /etc/volumerize/backupFull /etc/volumerize/restore \
       /etc/volumerize/periodicBackup /etc/volumerize/verify && \
-    chmod +x /etc/volumerize/backup /etc/volumerize/backupFull /etc/volumerize/restore \
+    chmod +x /etc/volumerize/startContainers /etc/volumerize/stopContainers \
+      /etc/volumerize/backup /etc/volumerize/backupFull /etc/volumerize/restore \
       /etc/volumerize/periodicBackup /etc/volumerize/verify && \
     # Install Jobber
     export JOBBER_HOME=/tmp/jobber && \
@@ -42,11 +45,18 @@ RUN apk upgrade --update && \
         # wget --directory-prefix=/tmp https://github.com/dshearer/jobber/releases/download/v1.1/jobber-${JOBBER_VERSION}-r0.x86_64.apk && \
         # apk add --allow-untrusted /tmp/jobber-${JOBBER_VERSION}-r0.x86_64.apk ; \
         cd src/github.com/dshearer/jobber && \
-        git checkout tags/${JOBBER_VERSION} && \
+        git checkout tags/v${JOBBER_VERSION} && \
         cd $JOBBER_LIB ; \
     fi && \
     make -C src/github.com/dshearer/jobber install DESTDIR=$JOBBER_HOME && \
     cp $JOBBER_LIB/bin/* /usr/bin && \
+    # Install Docker CLI
+    curl -fSL "https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz" -o /tmp/docker.tgz && \
+    export DOCKER_SHA=43b2479764ecb367ed169076a33e83f99a14dc85 && \
+    echo 'Calculated checksum: '$(sha1sum /tmp/docker.tgz) && \
+    echo "$DOCKER_SHA  /tmp/docker.tgz" | sha1sum -c - && \
+	  tar -xzvf /tmp/docker.tgz -C /tmp && \
+	  cp /tmp/docker/docker /usr/local/bin/ && \
     # Install Tini Zombie Reaper And Signal Forwarder
     export TINI_VERSION=0.9.0 && \
     export TINI_SHA=fa23d1e20732501c3bb8eeeca423c89ac80ed452 && \

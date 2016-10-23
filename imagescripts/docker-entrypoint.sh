@@ -12,6 +12,7 @@ fi
 if [ -n "${VOLUMERIZE_SOURCE}" ]; then
   source $CUR_DIR/create_scripts.sh
   source $CUR_DIR/create_jobber.sh
+  source $CUR_DIR/create_docker_scripts.sh
 fi
 
 if [ "$1" = 'volumerize' ]; then

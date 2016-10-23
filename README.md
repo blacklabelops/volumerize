@@ -139,7 +139,7 @@ $ docker start volumerize
 
 ## Dry run
 
-You can pass the `--dry-run` parameter to the restore command in order to test the restore functionality beforehand:
+You can pass the `--dry-run` parameter to the restore command in order to test the restore functionality:
 
 ~~~~
 $ docker run --rm \
@@ -185,11 +185,44 @@ $ docker run -d \
 
 > Backups three o'clock in the morning according to german local time.
 
+# Docker Container Restarts
+
+This image can stop and start Docker containers before and after backup. Docker containers are specified using the environment variable `VOLUMERIZE_CONTAINERS`. Just enter their names in a empty space separated list.
+
+Example:
+
+* Docker container application with name `application`
+* Docker container application database with name `application_database`
+
+Note: Needs the parameter `-v /var/run/docker.sock:/var/run/docker.sock` in order to be able to start and stop containers on the host.
+
+Example:
+
+~~~~
+$ docker run -d \
+    --name volumerize \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v jenkins_volume:/source:ro \
+    -v backup_volume:/backup \
+    -e "VOLUMERIZE_SOURCE=/source" \
+    -e "VOLUMERIZE_TARGET=file:///backup" \
+    -e "VOLUMERIZE_CONTAINERS=application application_database" \
+    blacklabelops/volumerize
+~~~~
+
+> The startup routine will not be applied to all scripts, just: backup, restore and periodBackup.
+
+Test the routine!
+
+~~~~
+$ docker exec volumerize backup
+~~~~
+
 # Duplicity Parameters
 
-You can pass duplicity options inside volumerize. Duplicity options will be passed by the environment-variable `VOLUMERIZE_DUPLICITY_OPTIONS`. The options will be added to all blacklabelops/volumerize commands and scripts. E.g. the option `--dry-run` will put the whole container in demo mode as all duplicity commands will only be simulated.
-
 Under the hood blacklabelops/volumerize uses duplicity. See here for duplicity command line options: [Duplicity CLI Options](http://duplicity.nongnu.org/duplicity.1.html#sect5)
+
+You can pass duplicity options inside Volumerize. Duplicity options will be passed by the environment-variable `VOLUMERIZE_DUPLICITY_OPTIONS`. The options will be added to all blacklabelops/volumerize commands and scripts. E.g. the option `--dry-run` will put the whole container in demo mode as all duplicity commands will only be simulated.
 
 Example:
 
