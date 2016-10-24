@@ -6,11 +6,14 @@ ARG JOBBER_VERSION=1.1
 ARG DOCKER_VERSION=1.12.2
 
 RUN apk upgrade --update && \
+    apk add \
+      py-pip && \
     # Install Duplicity
     if  [ "${DUPLICITY_VERSION}" = "latest" ]; \
       then apk add duplicity ; \
       else apk add "duplicity=${DUPLICITY_VERSION}" ; \
     fi && \
+    pip install dropbox && \
     mkdir -p /etc/volumerize /volumerize-cache /opt/volumerize && \
     touch /etc/volumerize/startContainers /etc/volumerize/stopContainers \
       /etc/volumerize/backup /etc/volumerize/backupFull /etc/volumerize/restore \
