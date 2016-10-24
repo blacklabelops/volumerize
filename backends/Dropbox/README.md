@@ -88,3 +88,46 @@ $ docker run --rm \
 ~~~~
 
 > Will perform a single verification of the volume contents against the dropbox archive.
+
+# Start and Stop Docker Containers
+
+Volumerize can stop containers before backup and start them after backup.
+
+First start a test container with the name `jenkins`
+
+~~~~
+$ docker run \
+     -d -p 80:8080 \
+     --name jenkins \
+     -v jenkins_volume:/jenkins \
+     blacklabelops/jenkins
+~~~~
+
+> Starts Jenkins and stores its data inside the Docker volume `jenkins_volume`.
+
+Now add the containers name inside the environment variable `VOLUMERIZE_CONTAINERS` and start Volumerize in demon mode:
+
+~~~~
+$ docker run -d \
+    --name volumerize \
+    -v volumerize_cache:/volumerize-cache \
+    -v jenkins_volume:/source:ro \
+    -e "VOLUMERIZE_SOURCE=/source" \
+    -e "VOLUMERIZE_TARGET=dpbx:///Apps/Volumerize" \
+    -e "DPBX_ACCESS_TOKEN=JUtoLXXwNNMAAAAAAA" \
+    -e "VOLUMERIZE_CONTAINERS=jenkins" \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    blacklabelops/volumerize
+~~~~
+
+> Needs access to the docker host over the directive `-v /var/run/docker.sock:/var/run/docker.sock`
+
+You can test the backup routine:
+
+~~~~
+$ docker exec volumerize backup
+~~~~
+
+> Triggers the backup inside the volume, the name `jenkins` should appear on the console.
+
+> Note: Make sure your container is not running with docker auto restart!
