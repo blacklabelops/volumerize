@@ -7,13 +7,36 @@ ARG DOCKER_VERSION=1.12.2
 
 RUN apk upgrade --update && \
     apk add \
+      openssh \
+      ca-certificates \
+      python-dev \
+      libffi-dev \
+      openssl-dev \
+      gcc \
+      alpine-sdk \
+      linux-headers \
+      musl-dev \
+      rsync \
       py-pip && \
     # Install Duplicity
     if  [ "${DUPLICITY_VERSION}" = "latest" ]; \
       then apk add duplicity ; \
       else apk add "duplicity=${DUPLICITY_VERSION}" ; \
     fi && \
-    pip install dropbox && \
+    pip install --no-cache-dir \
+      PyDrive \
+      azure-storage \
+      boto \
+      lockfile \
+      mediafire \
+      paramiko \
+      pycryptopp \
+      python-keystoneclient \
+      python-swiftclient \
+      requests \
+      requests_oauthlib \
+      urllib3 \
+      dropbox && \
     mkdir -p /etc/volumerize /volumerize-cache /opt/volumerize && \
     touch /etc/volumerize/startContainers /etc/volumerize/stopContainers \
       /etc/volumerize/backup /etc/volumerize/backupFull /etc/volumerize/restore \
@@ -72,6 +95,13 @@ RUN apk upgrade --update && \
       git \
       curl \
       wget \
+      python-dev \
+      libffi-dev \
+      openssl-dev \
+      alpine-sdk \
+      linux-headers \
+      gcc \
+      musl-dev \
       make && \
     rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
