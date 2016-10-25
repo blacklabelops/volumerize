@@ -1,16 +1,16 @@
-# Using Volumerize With Dropbox
+# Using Volumerize With Google Drive
 
-Volumerize can backup Docker volumes on Dropbox.
+Volumerize can backup Docker volumes on Google Drive.
 
 You have to perform the following steps:
 
-Login to you Dropbox account and create an app key.
+Login to Google developers console and create a service account.
 
-Read on how to create the app key on Dropbox: [Note on Dropbox Access](http://duplicity.nongnu.org/duplicity.1.html#toc12)
+Read on how to create the app key on Google directive: [Note on PyDrive](http://duplicity.nongnu.org/duplicity.1.html#sect22)
 
-The Dropbox App Creation Page: [Dropbox App Creation](https://www.dropbox.com/developers/apps/create)
+The Google developers console: [Google Developers Console](https://console.developers.google.com./)
 
-On the app page you need to generate the `Generated access token` for the environment variable `DPBX_ACCESS_TOKEN`.
+On the app page you need to generate the `OAuth client ID` and retrieve the `Client ID` and `Client Secret`.
 
 First we start our example container with some data to backup:
 
@@ -24,9 +24,23 @@ $ docker run \
 
 > Starts Jenkins and stores its data inside the Docker volume `jenkins_volume`.
 
-Start the container in demon mode and pass the access token through the environment variable `DPBX_ACCESS_TOKEN`.
+Start the container in `Authorization Mode` follow the authorization instructions and store your credentials inside a Docker volume!
 
-Setup Volumerize to use Dropbox for backups of the volume `jenkins_volume`. Make sure you have already created the backup folder inside Dropbox, e.g. here `/Apps/Volumerize`.
+~~~~
+$ docker run -it --rm \
+    -v volumerize_cache:/volumerize-cache \
+    -v volumerize_credentials:/credentials \
+    -v jenkins_volume:/source:ro \
+    -e "VOLUMERIZE_SOURCE=/source" \
+    -e "VOLUMERIZE_TARGET=gdocs:///youremail@gmail.com/backup" \
+    -e "GOOGLE_DRIVE_ID=12312786-e99grj1k5lwjepofjwpoejfpe5nqvkd3e.apps.googleusercontent.com" \
+    -e "GOOGLE_DRIVE_SECRET=FWeofWefkefnkef" \
+    blacklabelops/volumerize backup
+~~~~
+
+> Note: The routine will fail, you still have to enable the Google Drive API for your project. See the URL inside the log output.
+
+Setup Volumerize to use Google Drive for backups of the volume `jenkins_volume`.
 
 Start the container in demon mode:
 
@@ -34,22 +48,22 @@ Start the container in demon mode:
 $ docker run -d \
     --name volumerize \
     -v volumerize_cache:/volumerize-cache \
+    -v volumerize_credentials:/credentials \
     -v jenkins_volume:/source:ro \
     -e "VOLUMERIZE_SOURCE=/source" \
-    -e "VOLUMERIZE_TARGET=dpbx:///Apps/Volumerize" \
-    -e "DPBX_ACCESS_TOKEN=JUtoLXXwNNMAAAAAAA" \
+    -e "VOLUMERIZE_TARGET=gdocs://youremail@gmail.com/backup" \
     blacklabelops/volumerize
 ~~~~
 
 > `volumerize_cache` is the local data cache.
 
-You can start an initial backup:
+You can start an initial full backup:
 
 ~~~~
-$ docker exec volumerize backup
+$ docker exec volumerize backupFull
 ~~~~
 
-# Restore from Dropbox
+# Restore from Google Drive
 
 Restore is easy, just pass the same environment variables and start the restore script:
 
@@ -58,9 +72,9 @@ Restore is easy, just pass the same environment variables and start the restore 
 ~~~~
 $ docker run --rm \
     -v jenkins_test_restore:/source \
+    -v volumerize_credentials:/credentials \
     -e "VOLUMERIZE_SOURCE=/source" \
-    -e "VOLUMERIZE_TARGET=dpbx:///Apps/Volumerize" \
-    -e "DPBX_ACCESS_TOKEN=JUtoLXXwNNMAAAAAAA" \
+    -e "VOLUMERIZE_TARGET=gdocs://youremail@gmail.com/backup" \
     blacklabelops/volumerize restore
 ~~~~
 
@@ -76,18 +90,18 @@ $ docker run --rm \
 
 > Lists files inside the source volume
 
-Verify against the dropbox content:
+Verify against the Google Drive content:
 
 ~~~~
 $ docker run --rm \
     -v jenkins_test_restore:/source \
+    -v volumerize_credentials:/credentials \
     -e "VOLUMERIZE_SOURCE=/source" \
-    -e "VOLUMERIZE_TARGET=dpbx:///Apps/Volumerize" \
-    -e "DPBX_ACCESS_TOKEN=JUtoLXXwNNMAAAAAAA" \
+    -e "VOLUMERIZE_TARGET=gdocs://youremail@gmail.com/backup" \
     blacklabelops/volumerize verify
 ~~~~
 
-> Will perform a single verification of the volume contents against the dropbox archive.
+> Will perform a single verification of the volume contents against the Google Drive archive.
 
 # Start and Stop Docker Containers
 
@@ -110,11 +124,11 @@ Now add the containers name inside the environment variable `VOLUMERIZE_CONTAINE
 ~~~~
 $ docker run -d \
     --name volumerize \
-    -v volumerize_cache:/volumerize-cache \
     -v jenkins_volume:/source:ro \
+    -v volumerize_cache:/volumerize-cache \
+    -v volumerize_credentials:/credentials \
     -e "VOLUMERIZE_SOURCE=/source" \
-    -e "VOLUMERIZE_TARGET=dpbx:///Apps/Volumerize" \
-    -e "DPBX_ACCESS_TOKEN=JUtoLXXwNNMAAAAAAA" \
+    -e "VOLUMERIZE_TARGET=gdocs://youremail@gmail.com/backup" \
     -e "VOLUMERIZE_CONTAINERS=jenkins" \
     -v /var/run/docker.sock:/var/run/docker.sock \
     blacklabelops/volumerize

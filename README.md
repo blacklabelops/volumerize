@@ -33,6 +33,8 @@ and many more: [Duplicity Supported Backends](http://duplicity.nongnu.org/index.
 
 Docker Volume Backups on Dropbox: [Readme](https://github.com/blacklabelops/volumerize/tree/master/backends/Dropbox)
 
+Docker Volume Backups on Google Drive: [Readme](https://github.com/blacklabelops/volumerize/tree/master/backends/GoogleDrive)
+
 # Make It Short
 
 You can make backups of your Docker application volume just by typing:

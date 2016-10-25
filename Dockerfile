@@ -23,7 +23,7 @@ RUN apk upgrade --update && \
       then apk add duplicity ; \
       else apk add "duplicity=${DUPLICITY_VERSION}" ; \
     fi && \
-    pip install --no-cache-dir \
+    pip install \
       PyDrive \
       azure-storage \
       boto \
@@ -107,7 +107,8 @@ RUN apk upgrade --update && \
 
 ENV VOLUMERIZE_HOME=/etc/volumerize \
     VOLUMERIZE_CACHE=/volumerize-cache \
-    PATH=$PATH:/etc/volumerize
+    PATH=$PATH:/etc/volumerize \
+    GOOGLE_DRIVE_SETTINGS=/credentials/cred.file
 
 USER root
 WORKDIR /etc/volumerize
