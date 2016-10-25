@@ -10,7 +10,7 @@ client_config:
     client_secret: ${GOOGLE_DRIVE_SECRET}
 save_credentials: True
 save_credentials_backend: file
-save_credentials_file: /credentials/googledrive.cred
+save_credentials_file: ${GOOGLE_DRIVE_CREDENTIAL_FILE}
 get_refresh_token: True
 _EOF_
 fi

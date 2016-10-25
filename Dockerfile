@@ -108,7 +108,8 @@ RUN apk upgrade --update && \
 ENV VOLUMERIZE_HOME=/etc/volumerize \
     VOLUMERIZE_CACHE=/volumerize-cache \
     PATH=$PATH:/etc/volumerize \
-    GOOGLE_DRIVE_SETTINGS=/credentials/cred.file
+    GOOGLE_DRIVE_SETTINGS=/credentials/cred.file \
+    GOOGLE_DRIVE_CREDENTIAL_FILE=/credentials/googledrive.cred
 
 USER root
 WORKDIR /etc/volumerize
