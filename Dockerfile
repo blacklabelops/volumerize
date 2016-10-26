@@ -8,6 +8,7 @@ ARG DOCKER_VERSION=1.12.2
 RUN apk upgrade --update && \
     apk add \
       openssh \
+      duply \
       ca-certificates \
       python-dev \
       libffi-dev \

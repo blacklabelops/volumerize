@@ -31,6 +31,8 @@ and many more: [Duplicity Supported Backends](http://duplicity.nongnu.org/index.
 
 # Volume Backups Tutorials
 
+Docker Volume Backups on Amazon S3: [Readme]((https://github.com/blacklabelops/volumerize/tree/master/backends/AmazonS3))
+
 Docker Volume Backups on Dropbox: [Readme](https://github.com/blacklabelops/volumerize/tree/master/backends/Dropbox)
 
 Docker Volume Backups on Google Drive: [Readme](https://github.com/blacklabelops/volumerize/tree/master/backends/GoogleDrive)
