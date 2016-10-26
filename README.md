@@ -257,6 +257,33 @@ $ docker run -d \
 
 > Will only operate in dry-run simulation mode.
 
+# Symmetric Backup Encryption
+
+You can encrypt your backups by setting a secure passphrase inside the environment variable `PASSPHRASE`.
+
+Creating a secure passphrase:
+
+~~~~
+$ docker run --rm blacklabelops/volumerize openssl rand 128 -base64
+~~~~
+
+> Prints an appropriate password on the console.
+
+Example:
+
+~~~~
+$ docker run -d \
+    --name volumerize \
+    -v jenkins_volume:/source:ro \
+    -v backup_volume:/backup \
+    -e "VOLUMERIZE_SOURCE=/source" \
+    -e "VOLUMERIZE_TARGET=file:///backup" \
+    -e "PASSPHRASE=Jzwv1V83LHwtsbulVS7mMyijStBAs7Qr/V2MjuYtKg4KQVadRM" \
+    blacklabelops/volumerize
+~~~~
+
+> Same functionality as described above but all backups will be encrypted.
+
 # Container Scripts
 
 This image creates at container startup some convenience scripts.
