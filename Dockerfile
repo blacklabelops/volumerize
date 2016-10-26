@@ -41,10 +41,10 @@ RUN apk upgrade --update && \
       dropbox && \
     mkdir -p /etc/volumerize /volumerize-cache /opt/volumerize && \
     touch /etc/volumerize/startContainers /etc/volumerize/stopContainers \
-      /etc/volumerize/backup /etc/volumerize/backupFull /etc/volumerize/restore \
+      /etc/volumerize/backup /etc/volumerize/backupIncremental /etc/volumerize/backupFull /etc/volumerize/restore \
       /etc/volumerize/periodicBackup /etc/volumerize/verify && \
     chmod +x /etc/volumerize/startContainers /etc/volumerize/stopContainers \
-      /etc/volumerize/backup /etc/volumerize/backupFull /etc/volumerize/restore \
+      /etc/volumerize/backup /etc/volumerize/backupIncremental /etc/volumerize/backupFull /etc/volumerize/restore \
       /etc/volumerize/periodicBackup /etc/volumerize/verify && \
     # Install Jobber
     export JOBBER_HOME=/tmp/jobber && \
