@@ -17,8 +17,11 @@ function resolveOptions() {
   if [ -n "${VOLUMERIZE_DUPLICITY_OPTIONS}" ]; then
     DUPLICITY_OPTIONS=$DUPLICITY_OPTIONS" "${VOLUMERIZE_DUPLICITY_OPTIONS}
   fi
-  if [ ! -n "${PASSPHRASE}" ]; then
+  if [ ! -n "${PASSPHRASE}" ] && [ ! -n "${VOLUMERIZE_GPG_PUBLIC_KEY}" ] && [ ! -n "${VOLUMERIZE_GPG_PRIVATE_KEY}" ]; then
     DUPLICITY_OPTIONS=$DUPLICITY_OPTIONS" --no-encryption"
+  fi
+  if [ -n "${GPG_KEY_ID}" ]; then
+    DUPLICITY_OPTIONS=$DUPLICITY_OPTIONS' --gpg-options "--trust-model always"'" --encrypt-key ${GPG_KEY_ID}"
   fi
 }
 

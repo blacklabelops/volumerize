@@ -280,6 +280,75 @@ $ docker run -d \
 
 > Same functionality as described above but all backups will be encrypted.
 
+# Asymmetric Key-Based Backup Encryption
+
+You can encrypt your backups with secure secret keys.
+
+You need:
+
+* A key, specified by the environment-variable `VOLUMERIZE_GPG_PRIVATE_KEY`
+* A key passphrase, specified by the environment-variable `PASSPHRASE`
+
+Creating a key? Install gpg on your comp and type:
+
+~~~~
+$ gpg2 --full-gen-key
+Please select what kind of key you want:
+   (1) RSA and RSA (default)
+   (2) DSA and Elgamal
+   (3) DSA (sign only)
+   (4) RSA (sign only)
+Your selection? 1
+RSA keys may be between 1024 and 4096 bits long.
+What keysize do you want? (2048)
+Requested keysize is 2048 bits   
+Please specify how long the key should be valid.
+         0 = key does not expire
+      <n>  = key expires in n days
+      <n>w = key expires in n weeks
+      <n>m = key expires in n months
+      <n>y = key expires in n years
+Key is valid for? (0)
+Key does not expire at all
+Is this correct? (y/N) y
+
+GnuPG needs to construct a user ID to identify your key.
+
+Real name: YourName
+Email address: yourname@youremail.com
+Comment:                            
+You selected this USER-ID:
+    "YourName <yourname@youremail.com>"
+
+Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? O
+$ gpg2 --export-secret-keys --armor steve@bla.de > MyKey.asc
+~~~~
+
+> Note: Currently, this image only supports keys without passwords. The import routine is at fault, it would always prompt for passwords.
+
+Example:
+
+~~~~
+docker run -d \
+    --name volumerize \
+    -v jenkins_volume:/source:ro \
+    -v backup_volume:/backup \
+    -v $(pwd)/MyKey.asc:/key/MyKey.asc \
+    -e "VOLUMERIZE_SOURCE=/source" \
+    -e "VOLUMERIZE_TARGET=file:///backup" \
+    -e "VOLUMERIZE_GPG_PRIVATE_KEY=/key/MyKey.asc" \
+    -e "PASSPHRASE=" \
+    blacklabelops/volumerize
+~~~~
+
+> This will import a key without a password set.
+
+Test the routine!
+
+~~~~
+$ docker exec volumerize backup
+~~~~
+
 # Container Scripts
 
 This image creates at container startup some convenience scripts.
