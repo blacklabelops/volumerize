@@ -321,7 +321,7 @@ You selected this USER-ID:
     "YourName <yourname@youremail.com>"
 
 Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? O
-$ gpg2 --export-secret-keys --armor steve@bla.de > MyKey.asc
+$ gpg2 --export-secret-keys --armor yourname@youremail.com > MyKey.asc
 ~~~~
 
 > Note: Currently, this image only supports keys without passwords. The import routine is at fault, it would always prompt for passwords.
