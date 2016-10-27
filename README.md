@@ -8,8 +8,6 @@ Always remember that this no wizard tool that can clone and backup data from run
 
 Also note that the easier the tools the easier it is to lose data! Always make sure the tool works correct by checking the backup data itself, e.g. S3 bucket. Check the configuration double time and enable some check options this image offers. E.g. attaching volumes read only.
 
-> Note: Tutorials and examples for several backups are still in work.
-
 Features:
 
 * Multiple Backends
@@ -26,8 +24,6 @@ Supported backends:
 * rsync
 
 and many more: [Duplicity Supported Backends](http://duplicity.nongnu.org/index.html)
-
-> Note: Some backends require binaries which may not be available inside this image. Please open a ticket when you require something.
 
 # Volume Backups Tutorials
 
@@ -71,7 +67,7 @@ $ docker run \
 
 > Starts Jenkins and stores its data inside the Docker volume `jenkins_volume`.
 
-Now attach the Jenkins data to folders inside the container and tell blacklabelops/volumerize to backup folder `/source` to folder `/target`.
+Now attach the Jenkins data to folders inside the container and tell blacklabelops/volumerize to backup folder `/source` to folder `/backup`.
 
 ~~~~
 $ docker run -d \
@@ -91,7 +87,7 @@ You can execute commands inside the container, e.g. doing an immediate backup or
 $ docker exec volumerize backup
 ~~~~
 
-> Will trigger an incremental backup.
+> Will trigger a backup.
 
 # Backup Multiple volumes
 
@@ -320,6 +316,8 @@ $ docker exec volumerize backup --dry-run
 > `--dry-run` will simulate not execute the backup procedure.
 
 # Build The Project
+
+Check out the project at Github.
 
 ## Build the Image
 
