@@ -23,6 +23,9 @@ function resolveOptions() {
   if [ -n "${GPG_KEY_ID}" ]; then
     DUPLICITY_OPTIONS=$DUPLICITY_OPTIONS' --gpg-options "--trust-model always"'" --encrypt-key ${GPG_KEY_ID}"
   fi
+  if [ -n "${VOLUMERIZE_FULL_IF_OLDER_THAN}" ]; then
+    DUPLICITY_OPTIONS=$DUPLICITY_OPTIONS" --full-if-older-than ${VOLUMERIZE_FULL_IF_OLDER_THAN}"
+  fi
 }
 
 function resolveIncludes() {

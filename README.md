@@ -27,11 +27,15 @@ and many more: [Duplicity Supported Backends](http://duplicity.nongnu.org/index.
 
 # Volume Backups Tutorials
 
-Docker Volume Backups on Amazon S3: [Readme](https://github.com/blacklabelops/volumerize/tree/master/backends/AmazonS3)
+Docker Volume Backups on:
 
-Docker Volume Backups on Dropbox: [Readme](https://github.com/blacklabelops/volumerize/tree/master/backends/Dropbox)
+Backblaze B2: [Readme](https://github.com/blacklabelops/volumerize/tree/master/backends/BackblazeB2)
 
-Docker Volume Backups on Google Drive: [Readme](https://github.com/blacklabelops/volumerize/tree/master/backends/GoogleDrive)
+Amazon S3: [Readme](https://github.com/blacklabelops/volumerize/tree/master/backends/AmazonS3)
+
+Dropbox: [Readme](https://github.com/blacklabelops/volumerize/tree/master/backends/Dropbox)
+
+Google Drive: [Readme](https://github.com/blacklabelops/volumerize/tree/master/backends/GoogleDrive)
 
 # Make It Short
 
@@ -329,7 +333,7 @@ $ gpg2 --export-secret-keys --armor yourname@youremail.com > MyKey.asc
 Example:
 
 ~~~~
-docker run -d \
+$ docker run -d \
     --name volumerize \
     -v jenkins_volume:/source:ro \
     -v backup_volume:/backup \
@@ -348,6 +352,34 @@ Test the routine!
 ~~~~
 $ docker exec volumerize backup
 ~~~~
+
+# Enforcing Full Backups Periodically
+
+The default behavior is that the initial backup is a full backup. Afterwards, Volumerize will perform incremental backups. You can enforce another full backup periodically by specifying the environment variable `VOLUMERIZE_FULL_IF_OLDER_THAN`.
+
+The format is a number followed by one of the characters s, m, h, D, W, M, or Y. (indicating seconds, minutes, hours, days, weeks, months, or years)
+
+Examples:
+
+* After three Days: 3D
+* After one month: 1m
+* After 55 minutes: 55m
+
+Volumerize Example:
+
+~~~~
+$ docker run -d \
+    --name volumerize \
+    -v jenkins_volume:/source:ro \
+    -v backup_volume:/backup \
+    -e "TZ=Europe/Berlin" \
+    -e "VOLUMERIZE_SOURCE=/source" \
+    -e "VOLUMERIZE_TARGET=file:///backup" \
+    -e "VOLUMERIZE_FULL_IF_OLDER_THAN=7D" \
+    blacklabelops/volumerize
+~~~~
+
+> Will enforce a full backup after seven days.
 
 # Container Scripts
 

@@ -42,10 +42,10 @@ RUN apk upgrade --update && \
     mkdir -p /etc/volumerize /volumerize-cache /opt/volumerize && \
     touch /etc/volumerize/startContainers /etc/volumerize/stopContainers \
       /etc/volumerize/backup /etc/volumerize/backupIncremental /etc/volumerize/backupFull /etc/volumerize/restore \
-      /etc/volumerize/periodicBackup /etc/volumerize/verify && \
+      /etc/volumerize/periodicBackup /etc/volumerize/verify /etc/volumerize/cleanup && \
     chmod +x /etc/volumerize/startContainers /etc/volumerize/stopContainers \
       /etc/volumerize/backup /etc/volumerize/backupIncremental /etc/volumerize/backupFull /etc/volumerize/restore \
-      /etc/volumerize/periodicBackup /etc/volumerize/verify && \
+      /etc/volumerize/periodicBackup /etc/volumerize/verify /etc/volumerize/cleanup && \
     # Install Jobber
     export JOBBER_HOME=/tmp/jobber && \
     export JOBBER_LIB=$JOBBER_HOME/lib && \
