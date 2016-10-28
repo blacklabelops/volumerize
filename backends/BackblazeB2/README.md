@@ -26,11 +26,11 @@ $ docker run \
 
 > Starts Jenkins and stores its data inside the Docker volume `jenkins_volume`.
 
-Now build your b2 url according to the template:
+Now build your B2 url according to the template:
 
 `b2://account_id[:application_key]@bucket_name/[folder/]`.
 
-Start the container in demon mode with your AWS credentials:
+Start the container in demon mode with your url:
 
 ~~~~
 $ docker run -d \
