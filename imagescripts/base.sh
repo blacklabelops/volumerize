@@ -26,6 +26,9 @@ function resolveOptions() {
   if [ -n "${VOLUMERIZE_FULL_IF_OLDER_THAN}" ]; then
     DUPLICITY_OPTIONS=$DUPLICITY_OPTIONS" --full-if-older-than ${VOLUMERIZE_FULL_IF_OLDER_THAN}"
   fi
+  if [ "${VOLUMERIZE_ASYNCHRONOUS_UPLOAD}" = 'true' ]; then
+    DUPLICITY_OPTIONS=$DUPLICITY_OPTIONS" --asynchronous-upload"
+  fi
 }
 
 function resolveIncludes() {
