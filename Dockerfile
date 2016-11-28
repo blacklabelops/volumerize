@@ -19,6 +19,7 @@ RUN apk upgrade --update && \
       linux-headers \
       musl-dev \
       rsync \
+      lftp \
       py-pip && \
     # Install Duplicity
     if  [ "${DUPLICITY_VERSION}" = "latest" ]; \
