@@ -26,6 +26,7 @@ RUN apk upgrade --update && \
       then apk add duplicity ; \
       else apk add "duplicity=${DUPLICITY_VERSION}" ; \
     fi && \
+    pip install --upgrade pip && \
     pip install \
       PyDrive \
       azure-storage \
@@ -68,7 +69,7 @@ RUN apk upgrade --update && \
     addgroup -g $CONTAINER_GID jobber_client && \
     adduser -u $CONTAINER_UID -G jobber_client -s /bin/bash -S jobber_client && \
     cd $JOBBER_LIB && \
-    go get github.com/dshearer/jobber && \
+    go get github.com/dshearer/jobber;true && \
     if  [ "${JOBBER_VERSION}" != "latest" ]; \
       then \
         # wget --directory-prefix=/tmp https://github.com/dshearer/jobber/releases/download/v1.1/jobber-${JOBBER_VERSION}-r0.x86_64.apk && \
