@@ -6,7 +6,7 @@
 node {
   checkout scm
   stage 'Build Images'
-  parallel("image-alpine": { load './buildscripts/buildImage.groovy' })
+  parallel("image-alpine": { load './buildscripts/alpineBuildImages.groovy' })
   stage 'Test Images'
-  parallel("image-alpine": { load './buildscripts/testImage.groovy' })
+  parallel("image-alpine": { load './buildscripts/alpineTestImages.groovy' })
 }
