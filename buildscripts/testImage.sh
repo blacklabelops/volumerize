@@ -10,7 +10,7 @@ function testPrintVersion() {
   else
     imagename=$tagname-development
   fi
-  docker run --rm blacklabelops/volumerize:$imagename echo
+  docker run --rm blacklabelops/volumerize:$imagename duplicity -V
 }
 
 testPrintVersion $1
