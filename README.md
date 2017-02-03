@@ -431,3 +431,7 @@ $ docker build -t blacklabelops/volumerize .
 ~~~~
 $ docker run -it --rm blacklabelops/volumerize bash
 ~~~~
+
+# Support
+
+Leave a message and ask questions on Hipchat: [blacklabelops/hipchat](http://support.blacklabelops.com)
