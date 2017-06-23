@@ -7,6 +7,7 @@ ARG DOCKER_VERSION=1.12.2
 
 RUN apk upgrade --update && \
     apk add \
+      tzdata \
       openssh \
       openssl \
       duply \
