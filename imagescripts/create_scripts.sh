@@ -63,3 +63,18 @@ set -o errexit
 
 exec ${DUPLICITY_COMMAND} cleanup ${PARAMETER_PROXY} ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_TARGET}
 _EOF_
+
+cat > ${VOLUMERIZE_SCRIPT_DIR}/remove-older-than <<_EOF_
+#!/bin/bash
+
+set -o errexit
+
+REMOVAL_TIME=$1
+
+if [ -n "${REMOVAL_TIME}" ]; then
+  echo "Usage example: "${remove-older-than}" 3d"
+  exit
+fi
+
+exec ${DUPLICITY_COMMAND} remove-older-than ${REMOVAL_TIME} ${PARAMETER_PROXY} ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_TARGET}
+_EOF_
