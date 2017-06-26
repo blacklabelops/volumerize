@@ -43,8 +43,14 @@ cat > ${VOLUMERIZE_SCRIPT_DIR}/restore <<_EOF_
 
 set -o errexit
 
+RESTORE_TIME=$1
+
+if [ -n "${RESTORE_TIME}" ]; then
+  RESTORE_TIME_PARAMETER="-t "${RESTORE_TIME}
+fi
+
 source ${VOLUMERIZE_SCRIPT_DIR}/stopContainers
-${DUPLICITY_COMMAND} restore --force ${PARAMETER_PROXY} ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_TARGET} ${VOLUMERIZE_SOURCE}
+${DUPLICITY_COMMAND} restore --force ${RESTORE_TIME_PARAMETER} ${PARAMETER_PROXY} ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_TARGET} ${VOLUMERIZE_SOURCE}
 source ${VOLUMERIZE_SCRIPT_DIR}/startContainers
 _EOF_
 
@@ -71,8 +77,8 @@ set -o errexit
 
 REMOVAL_TIME=$1
 
-if [ -n "${REMOVAL_TIME}" ]; then
-  echo "Usage example: "${remove-older-than}" 3d"
+if [ ! -n "${REMOVAL_TIME}" ]; then
+  echo "Usage example: "remove-older-than 3d"
   exit
 fi
 
