@@ -395,6 +395,7 @@ This image creates at container startup some convenience scripts.
 | periodicBackup | Same script that will be triggered by the periodic schedule |
 | startContainers | Starts the specified Docker containers |
 | stopContainers | Stops the specified Docker containers |
+| remove-older-than | Delete older backups |
 
 Example triggering script inside running container:
 

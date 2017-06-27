@@ -2,6 +2,8 @@
 
 set -o errexit
 
+[[ ${DEBUG} == true ]] && set -x
+
 function pipeEnvironmentVariables() {
   local environmentfile="/etc/profile.d/jobber.sh"
   cat > ${environmentfile} <<_EOF_
