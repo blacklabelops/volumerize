@@ -32,7 +32,7 @@ $ docker run -it --rm \
     -v volumerize_credentials:/credentials \
     -v jenkins_volume:/source:ro \
     -e "VOLUMERIZE_SOURCE=/source" \
-    -e "VOLUMERIZE_TARGET=gdocs:///youremail@gmail.com/backup" \
+    -e "VOLUMERIZE_TARGET=gdocs://youremail@gmail.com/backup" \
     -e "GOOGLE_DRIVE_ID=12312786-e99grj1k5lwjepofjwpoejfpe5nqvkd3e.apps.googleusercontent.com" \
     -e "GOOGLE_DRIVE_SECRET=FWeofWefkefnkef" \
     blacklabelops/volumerize backup
