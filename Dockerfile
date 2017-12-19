@@ -41,7 +41,7 @@ RUN apk upgrade --update && \
       requests \
       requests_oauthlib \
       urllib3 \
-      dropbox && \
+      dropbox==6.9.0 && \
     mkdir -p /etc/volumerize /volumerize-cache /opt/volumerize && \
     touch /etc/volumerize/remove-all-inc-of-but-n-full /etc/volumerize/remove-all-but-n-full /etc/volumerize/startContainers /etc/volumerize/stopContainers \
       /etc/volumerize/backup /etc/volumerize/backupIncremental /etc/volumerize/backupFull /etc/volumerize/restore \
