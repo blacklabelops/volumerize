@@ -87,3 +87,13 @@ set -o errexit
 
 exec ${DUPLICITY_COMMAND} remove-all-inc-of-but-n-full ${PARAMETER_PROXY} ${DUPLICITY_OPTIONS} ${VOLUMERIZE_TARGET}
 _EOF_
+
+FILENAME_VARIABLE='$filename'
+
+cat > ${VOLUMERIZE_SCRIPT_DIR}/cleanCacheLocks <<_EOF_
+#!/bin/bash
+
+set -o errexit
+
+find /volumerize-cache/ -maxdepth 2 -type f -name lockfile.lock | while read filename ; do fuser -s ${FILENAME_VARIABLE} || rm -fv ${FILENAME_VARIABLE} ; done
+_EOF_

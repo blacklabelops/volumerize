@@ -46,6 +46,7 @@ $ docker run -it --rm \
     --name volumerize \
     -v yourvolume:/source:ro \
     -v backup_volume:/backup \
+    -v cache_volume:/volumerize-cache \
     -e "VOLUMERIZE_SOURCE=/source" \
     -e "VOLUMERIZE_TARGET=file:///backup" \
     blacklabelops/volumerize backup
@@ -78,6 +79,7 @@ $ docker run -d \
     --name volumerize \
     -v jenkins_volume:/source:ro \
     -v backup_volume:/backup \
+    -v cache_volume:/volumerize-cache \
     -e "VOLUMERIZE_SOURCE=/source" \
     -e "VOLUMERIZE_TARGET=file:///backup" \
     blacklabelops/volumerize
@@ -112,6 +114,7 @@ $ docker run -d \
     -v application_database_data:/source/application_database_data:ro \
     -v application_configuration:/source/application_configuration:ro \
     -v backup_volume:/backup \
+    -v cache_volume:/volumerize-cache \
     -e "VOLUMERIZE_SOURCE=/source" \
     -e "VOLUMERIZE_TARGET=file:///backup" \
     blacklabelops/volumerize
@@ -135,6 +138,7 @@ $ docker run -d \
     --name volumerize \
     -v jenkins_volume:/source:ro \
     -v backup_volume:/backup \
+    -v cache_volume:/volumerize-cache \
     -e "VOLUMERIZE_SOURCE=/source" \
     -e "VOLUMERIZE_TARGET=file:///backup" \
     blacklabelops/volumerize
@@ -147,6 +151,7 @@ $ docker stop volumerize
 $ docker run --rm \
     -v jenkins_volume:/source \
     -v backup_volume:/backup:ro \
+    -v cache_volume:/volumerize-cache \
     -e "VOLUMERIZE_SOURCE=/source" \
     -e "VOLUMERIZE_TARGET=file:///backup" \
     blacklabelops/volumerize restore
@@ -163,6 +168,7 @@ You can pass the `--dry-run` parameter to the restore command in order to test t
 $ docker run --rm \
     -v jenkins_volume:/source \
     -v backup_volume:/backup:ro \
+    -v cache_volume:/volumerize-cache \
     -e "VOLUMERIZE_SOURCE=/source" \
     -e "VOLUMERIZE_TARGET=file:///backup" \
     blacklabelops/volumerize restore --dry-run
@@ -174,6 +180,7 @@ But in order to see the differences between backup and source you need the verif
 $ docker run --rm \
     -v jenkins_volume:/source \
     -v backup_volume:/backup:ro \
+    -v cache_volume:/volumerize-cache \
     -e "VOLUMERIZE_SOURCE=/source" \
     -e "VOLUMERIZE_TARGET=file:///backup" \
     blacklabelops/volumerize verify
@@ -194,6 +201,7 @@ $ docker run -d \
     --name volumerize \
     -v jenkins_volume:/source:ro \
     -v backup_volume:/backup \
+    -v cache_volume:/volumerize-cache \
     -e "TZ=Europe/Berlin"
     -e "VOLUMERIZE_SOURCE=/source" \
     -e "VOLUMERIZE_TARGET=file:///backup" \
@@ -222,6 +230,7 @@ $ docker run -d \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v jenkins_volume:/source:ro \
     -v backup_volume:/backup \
+    -v cache_volume:/volumerize-cache \
     -e "VOLUMERIZE_SOURCE=/source" \
     -e "VOLUMERIZE_TARGET=file:///backup" \
     -e "VOLUMERIZE_CONTAINERS=application application_database" \
@@ -251,6 +260,7 @@ $ docker run -d \
     --name volumerize \
     -v jenkins_volume:/source:ro \
     -v backup_volume:/backup \
+    -v cache_volume:/volumerize-cache \
     -e "VOLUMERIZE_SOURCE=/source" \
     -e "VOLUMERIZE_TARGET=file:///backup" \
     -e "VOLUMERIZE_DUPLICITY_OPTIONS=--dry-run" \
@@ -278,6 +288,7 @@ $ docker run -d \
     --name volumerize \
     -v jenkins_volume:/source:ro \
     -v backup_volume:/backup \
+    -v cache_volume:/volumerize-cache \
     -e "VOLUMERIZE_SOURCE=/source" \
     -e "VOLUMERIZE_TARGET=file:///backup" \
     -e "PASSPHRASE=Jzwv1V83LHwtsbulVS7mMyijStBAs7Qr/V2MjuYtKg4KQVadRM" \
@@ -339,6 +350,7 @@ $ docker run -d \
     --name volumerize \
     -v jenkins_volume:/source:ro \
     -v backup_volume:/backup \
+    -v cache_volume:/volumerize-cache \
     -v $(pwd)/MyKey.asc:/key/MyKey.asc \
     -e "VOLUMERIZE_SOURCE=/source" \
     -e "VOLUMERIZE_TARGET=file:///backup" \
@@ -374,6 +386,7 @@ $ docker run -d \
     --name volumerize \
     -v jenkins_volume:/source:ro \
     -v backup_volume:/backup \
+    -v cache_volume:/volumerize-cache \
     -e "TZ=Europe/Berlin" \
     -e "VOLUMERIZE_SOURCE=/source" \
     -e "VOLUMERIZE_TARGET=file:///backup" \
@@ -398,6 +411,7 @@ This image creates at container startup some convenience scripts.
 | startContainers | Starts the specified Docker containers |
 | stopContainers | Stops the specified Docker containers |
 | remove-older-than | Delete older backups |
+| cleanCacheLocks | Cleanup of old Cache locks. |
 
 Example triggering script inside running container:
 
