@@ -2,7 +2,7 @@ FROM alpine:3.7
 MAINTAINER Steffen Bleul <sbl@blacklabelops.com>
 
 ARG JOBBER_VERSION=1.3.2
-ARG 17.12.1
+ARG DOCKER_VERSION=17.12.1
 
 ENV VOLUMERIZE_HOME=/etc/volumerize \
     VOLUMERIZE_CACHE=/volumerize-cache \
