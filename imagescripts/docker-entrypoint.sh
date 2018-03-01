@@ -45,7 +45,7 @@ fi
 
 if [ "$1" = 'volumerize' ]; then
   pipeEnvironmentVariables
-  exec jobberd
+  exec /usr/libexec/jobbermaster
 else
   exec "$@"
 fi
