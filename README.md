@@ -262,6 +262,8 @@ Under the hood blacklabelops/volumerize uses duplicity. See here for duplicity c
 
 You can pass duplicity options inside Volumerize. Duplicity options will be passed by the environment-variable `VOLUMERIZE_DUPLICITY_OPTIONS`. The options will be added to all blacklabelops/volumerize commands and scripts. E.g. the option `--dry-run` will put the whole container in demo mode as all duplicity commands will only be simulated.
 
+And you have ability to set duplicity mode: incremental or full backup with `VOLUMERIZE_DUPLICITY_MODE`
+
 Example:
 
 ~~~~
@@ -273,6 +275,7 @@ $ docker run -d \
     -e "VOLUMERIZE_SOURCE=/source" \
     -e "VOLUMERIZE_TARGET=file:///backup" \
     -e "VOLUMERIZE_DUPLICITY_OPTIONS=--dry-run" \
+    -e "VOLUMERIZE_DUPLICITY_MODE=full" \
     blacklabelops/volumerize
 ~~~~
 
