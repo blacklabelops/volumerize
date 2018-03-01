@@ -2,7 +2,7 @@ FROM alpine:3.7
 MAINTAINER Steffen Bleul <sbl@blacklabelops.com>
 
 ARG JOBBER_VERSION=1.3.2
-ARG TINI_VERSION=0.17.0
+ARG 17.12.1
 
 ENV VOLUMERIZE_HOME=/etc/volumerize \
     VOLUMERIZE_CACHE=/volumerize-cache \
@@ -63,6 +63,12 @@ RUN apk --no-cache add \
       musl-dev \
       make 
 
+# Install Docker CLI
+RUN curl -fSL "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}-ce.tgz" \
+      -o /tmp/docker.tgz && \
+	  tar -xzvf /tmp/docker.tgz -C /tmp && \
+	  mv /tmp/docker/docker /usr/local/bin/ && \
+      rm -rf /tmp/docker.tgz /tmp/docker
 
 RUN  mkdir -p /etc/volumerize /volumerize-cache /opt/volumerize && \
     touch /etc/volumerize/remove-all-inc-of-but-n-full /etc/volumerize/remove-all-but-n-full /etc/volumerize/startContainers /etc/volumerize/stopContainers \
