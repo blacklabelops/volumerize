@@ -1,4 +1,5 @@
 FROM alpine:3.7
+MAINTAINER Steffen Bleul <sbl@blacklabelops.com>
 
 ARG JOBBER_VERSION=1.3.2
 ARG TINI_VERSION=0.17.0
