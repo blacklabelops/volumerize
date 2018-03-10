@@ -6,7 +6,7 @@ function buildImage() {
   local tagname=$1
   local version=$2
   local branch=$BUILD_BRANCH
-  docker build --no-cache -t blacklabelops/volumerize:$imagename .
+  docker build --no-cache -t blacklabelops/volumerize:$tagname .
 }
 
 buildImage $1 $2
