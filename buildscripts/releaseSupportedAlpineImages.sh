@@ -26,5 +26,4 @@ function pushImage() {
   docker push $repository/blacklabelops/volumerize:$tagname
 }
 
-pushImage latest $PUSH_REPOSITORY
 pushImage $PUSH_IMAGE_VERSION $PUSH_REPOSITORY

@@ -10,5 +10,4 @@ source $CUR_DIR/release.sh
 
 readonly TEST_IMAGE_VERSION=$IMAGE_VERSION
 
-source $CUR_DIR/testImage.sh latest 8530
 source $CUR_DIR/testImage.sh $TEST_IMAGE_VERSION 8540

@@ -10,5 +10,4 @@ source $CUR_DIR/release.sh
 
 readonly BUILD_IMAGE_VERSION=$IMAGE_VERSION
 
-source $CUR_DIR/buildImage.sh latest latest
 source $CUR_DIR/buildImage.sh $BUILD_IMAGE_VERSION $BUILD_IMAGE_VERSION
