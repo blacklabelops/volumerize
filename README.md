@@ -220,6 +220,41 @@ $ docker run -d \
 
 > Backups three o'clock in the morning according to german local time.
 
+# Additional Jobber Cron Jobs
+
+You can now define jobber cron jobs inside volumerize:
+
+Example:
+
+~~~~
+$ docker run -d \
+    --name volumerize \
+    -v jenkins_volume:/source:ro \
+    -v backup_volume:/backup \
+    -e "VOLUMERIZE_SOURCE=/source" \
+    -e "VOLUMERIZE_TARGET=file:///backup" \
+    -e "JOB_NAME2=RemoveOldBackups" \
+    -e "JOB_COMMAND2=/etc/volumerize/remove-older-than 3D" \
+    -e "JOB_TIME2=0 0 * * * *" \
+    blacklabelops/volumerize
+~~~~    
+
+> Note: Enumerated Jobber tasks must start with number 2 because 1 is held by the periodical backup task.
+
+Add additional jobs
+~~~~
+    -e "JOB_NAME2=RemoveOldBackups" \
+    -e "JOB_COMMAND2=/etc/volumerize/remove-older-than 3D" \
+    -e "JOB_TIME2=0 0 * * * *" \
+    -e "JOB_NAME3=AnotherRemoveOldBackups" \
+    -e "JOB_COMMAND3=/etc/volumerize/remove-all-but-n-full 3D" \
+    -e "JOB_TIME3=0 0 * * * *" \
+    -e "JOB_NAME4=YetAnotherRemoveOldBackups" \
+    -e "JOB_COMMAND4=/etc/volumerize/remove-all-inc-of-but-n-full 3D" \
+    -e "JOB_TIME4=0 0 * * * *" \
+    ...
+~~~~
+
 # Docker Container Restarts
 
 This image can stop and start Docker containers before and after backup. Docker containers are specified using the environment variable `VOLUMERIZE_CONTAINERS`. Just enter their names in a empty space separated list.
@@ -385,7 +420,7 @@ The format is a number followed by one of the characters s, m, h, D, W, M, or Y.
 Examples:
 
 * After three Days: 3D
-* After one month: 1m
+* After one month: 1M
 * After 55 minutes: 55m
 
 Volumerize Example:
