@@ -45,7 +45,15 @@ fi
 
 if [ "$1" = 'volumerize' ]; then
   pipeEnvironmentVariables
-  exec jobberd
+  exec /usr/libexec/jobbermaster
+elif [ "$1" = 'wait_and_restore' ]; then
+  echo "Waiting for files to be ready. Create .READY_TO_GO file when ready"
+  while [[ ! -e "$(echo ${VOLUMERIZE_TARGET}| sed 's|file://||')/.READY_TO_GO" ]]; do
+    sleep 30
+  done 
+  echo 
+  echo 'Starting restore'
+  exec restore
 else
   exec "$@"
 fi
