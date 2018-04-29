@@ -103,11 +103,14 @@ RUN apk upgrade --update && \
       python-dev \
       libffi-dev \
       openssl-dev \
+      openssl \
       alpine-sdk \
       linux-headers \
       gcc \
       musl-dev \
       make && \
+    apk add \
+        openssl && \
     rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
 ENV VOLUMERIZE_HOME=/etc/volumerize \
