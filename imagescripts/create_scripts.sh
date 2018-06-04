@@ -8,13 +8,48 @@ source $CUR_DIR/base.sh
 
 readonly PARAMETER_PROXY='$@'
 
+cat > ${VOLUMERIZE_SCRIPT_DIR}/prexecute << '_EOF_'
+#!/bin/bash
+
+set -o errexit
+
+if [ -d "/prexecute" ]; then
+    for f in /prexecute/*; do
+        case "$f" in
+            *.sh) echo "running $f"; . "$f" ;;
+            *)    echo "ignoring $f" ;;
+        esac
+        echo
+    done
+fi
+_EOF_
+
+cat > ${VOLUMERIZE_SCRIPT_DIR}/postexecute << '_EOF_'
+#!/bin/bash
+
+set -o errexit
+
+if [ -d "/postexecute" ]; then
+    for f in /postexecute/*; do
+        case "$f" in
+            *.sh) echo "running $f"; . "$f" ;;
+            *)    echo "ignoring $f" ;;
+        esac
+        echo
+    done
+fi
+_EOF_
+
+
 cat > ${VOLUMERIZE_SCRIPT_DIR}/backup <<_EOF_
 #!/bin/bash
 
 set -o errexit
 
 source ${VOLUMERIZE_SCRIPT_DIR}/stopContainers
+source ${VOLUMERIZE_SCRIPT_DIR}/prexecute
 ${DUPLICITY_COMMAND} ${PARAMETER_PROXY} ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_SOURCE} ${VOLUMERIZE_TARGET}
+source ${VOLUMERIZE_SCRIPT_DIR}/postexecute
 source ${VOLUMERIZE_SCRIPT_DIR}/startContainers
 _EOF_
 
@@ -24,7 +59,9 @@ cat > ${VOLUMERIZE_SCRIPT_DIR}/backupIncremental <<_EOF_
 set -o errexit
 
 source ${VOLUMERIZE_SCRIPT_DIR}/stopContainers
+source ${VOLUMERIZE_SCRIPT_DIR}/prexecute
 ${DUPLICITY_COMMAND} incremental ${PARAMETER_PROXY} ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_SOURCE} ${VOLUMERIZE_TARGET}
+source ${VOLUMERIZE_SCRIPT_DIR}/postexecute
 source ${VOLUMERIZE_SCRIPT_DIR}/startContainers
 _EOF_
 
@@ -34,7 +71,9 @@ cat > ${VOLUMERIZE_SCRIPT_DIR}/backupFull <<_EOF_
 set -o errexit
 
 source ${VOLUMERIZE_SCRIPT_DIR}/stopContainers
+source ${VOLUMERIZE_SCRIPT_DIR}/prexecute
 ${DUPLICITY_COMMAND} full ${PARAMETER_PROXY} ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_SOURCE} ${VOLUMERIZE_TARGET}
+source ${VOLUMERIZE_SCRIPT_DIR}/postexecute
 source ${VOLUMERIZE_SCRIPT_DIR}/startContainers
 _EOF_
 
@@ -44,7 +83,9 @@ cat > ${VOLUMERIZE_SCRIPT_DIR}/restore <<_EOF_
 set -o errexit
 
 source ${VOLUMERIZE_SCRIPT_DIR}/stopContainers
+source ${VOLUMERIZE_SCRIPT_DIR}/prexecute
 ${DUPLICITY_COMMAND} restore --force ${PARAMETER_PROXY} ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_TARGET} ${VOLUMERIZE_SOURCE}
+source ${VOLUMERIZE_SCRIPT_DIR}/postexecute
 source ${VOLUMERIZE_SCRIPT_DIR}/startContainers
 _EOF_
 

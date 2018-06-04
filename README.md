@@ -405,6 +405,14 @@ $ docker run -d \
 
 > Will enforce a full backup after seven days.
 
+# Post scripts and pre scripts
+
+If you mount a folder in `/prexecute` containing `.sh` files, they will be executed in alphabetical order before the backup and after the docker stop process.
+
+If you mount a folder in `/postexecute` containing `.sh` files, they will be executed in alphabetical order after the backup and before the docker start process.
+
+In this scripts the global variable `BACKUP_TYPE` contains the type of backup or restore, so it will contain one of this options `backup, backupIncremental, backupFull or restore` so you can customize your scripts to do one thing or another depending of the type of backup or if its a restore.
+
 # Container Scripts
 
 This image creates at container startup some convenience scripts.
@@ -421,6 +429,8 @@ This image creates at container startup some convenience scripts.
 | stopContainers | Stops the specified Docker containers |
 | remove-older-than | Delete older backups |
 | cleanCacheLocks | Cleanup of old Cache locks. |
+| prexecute | Execute all .sh files in /prexecute folder. |
+| postexecute | Execute all .sh files in /postexecute folder. |
 
 Example triggering script inside running container:
 
