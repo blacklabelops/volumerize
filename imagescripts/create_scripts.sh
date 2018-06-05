@@ -47,6 +47,7 @@ cat > ${VOLUMERIZE_SCRIPT_DIR}/backup <<_EOF_
 set -o errexit
 
 source ${VOLUMERIZE_SCRIPT_DIR}/stopContainers
+export BACKUP_TYPE=\$(basename -- "\$0")
 source ${VOLUMERIZE_SCRIPT_DIR}/prexecute
 ${DUPLICITY_COMMAND} ${PARAMETER_PROXY} ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_SOURCE} ${VOLUMERIZE_TARGET}
 source ${VOLUMERIZE_SCRIPT_DIR}/postexecute
@@ -59,6 +60,7 @@ cat > ${VOLUMERIZE_SCRIPT_DIR}/backupIncremental <<_EOF_
 set -o errexit
 
 source ${VOLUMERIZE_SCRIPT_DIR}/stopContainers
+export BACKUP_TYPE=\$(basename -- "\$0")
 source ${VOLUMERIZE_SCRIPT_DIR}/prexecute
 ${DUPLICITY_COMMAND} incremental ${PARAMETER_PROXY} ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_SOURCE} ${VOLUMERIZE_TARGET}
 source ${VOLUMERIZE_SCRIPT_DIR}/postexecute
@@ -71,6 +73,7 @@ cat > ${VOLUMERIZE_SCRIPT_DIR}/backupFull <<_EOF_
 set -o errexit
 
 source ${VOLUMERIZE_SCRIPT_DIR}/stopContainers
+export BACKUP_TYPE=\$(basename -- "\$0")
 source ${VOLUMERIZE_SCRIPT_DIR}/prexecute
 ${DUPLICITY_COMMAND} full ${PARAMETER_PROXY} ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_SOURCE} ${VOLUMERIZE_TARGET}
 source ${VOLUMERIZE_SCRIPT_DIR}/postexecute
@@ -83,6 +86,7 @@ cat > ${VOLUMERIZE_SCRIPT_DIR}/restore <<_EOF_
 set -o errexit
 
 source ${VOLUMERIZE_SCRIPT_DIR}/stopContainers
+export BACKUP_TYPE=\$(basename -- "\$0")
 source ${VOLUMERIZE_SCRIPT_DIR}/prexecute
 ${DUPLICITY_COMMAND} restore --force ${PARAMETER_PROXY} ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_TARGET} ${VOLUMERIZE_SOURCE}
 source ${VOLUMERIZE_SCRIPT_DIR}/postexecute
