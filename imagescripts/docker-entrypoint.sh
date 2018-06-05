@@ -47,6 +47,5 @@ if [ "$1" = 'volumerize' ]; then
   pipeEnvironmentVariables
   exec jobberd
 else
-  export BACKUP_TYPE=$@
   exec "$@"
 fi
