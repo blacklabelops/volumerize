@@ -405,13 +405,15 @@ $ docker run -d \
 
 > Will enforce a full backup after seven days.
 
-# Post scripts and pre scripts
+# Post scripts and pre scripts (prepost strategies)
 
 If you mount a folder in `/prexecute` containing `.sh` files, they will be executed in alphabetical order before the backup and after the docker stop process.
 
 If you mount a folder in `/postexecute` containing `.sh` files, they will be executed in alphabetical order after the backup and before the docker start process.
 
 In this scripts the global variable `BACKUP_TYPE` contains the type of backup or restore, so it will contain one of this options `backup, backupIncremental, backupFull or restore` so you can customize your scripts to do one thing or another depending of the type of backup or if its a restore.
+
+For an example and implementation for mysqldump and restore look at /prepost_strategies/mysql/README.md
 
 # Container Scripts
 
