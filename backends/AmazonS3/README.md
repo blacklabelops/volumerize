@@ -62,7 +62,6 @@ Start the container in demon mode with your AWS credentials:
 $ docker run -d \
     --name volumerize \
     -v volumerize_cache:/volumerize-cache \
-    -v volumerize_credentials:/credentials \
     -v jenkins_volume:/source:ro \
     -e "VOLUMERIZE_SOURCE=/source" \
     -e "VOLUMERIZE_TARGET=s3://s3.eu-central-1.amazonaws.com/duplicitytest" \
@@ -88,7 +87,6 @@ Restore is easy, just pass the same environment variables and start the restore 
 ~~~~
 $ docker run --rm \
     -v jenkins_test_restore:/source \
-    -v volumerize_credentials:/credentials \
     -e "VOLUMERIZE_SOURCE=/source" \
     -e "VOLUMERIZE_TARGET=s3://s3.eu-central-1.amazonaws.com/duplicitytest" \
     -e "AWS_ACCESS_KEY_ID=QQWDQIWIDO1QO" \
@@ -113,7 +111,6 @@ Verify against the Amazon S3 Drive content:
 ~~~~
 $ docker run --rm \
     -v jenkins_test_restore:/source \
-    -v volumerize_credentials:/credentials \
     -e "VOLUMERIZE_SOURCE=/source" \
     -e "VOLUMERIZE_TARGET=s3://s3.eu-central-1.amazonaws.com/duplicitytest" \
     -e "AWS_ACCESS_KEY_ID=QQWDQIWIDO1QO" \
@@ -146,7 +143,6 @@ $ docker run -d \
     --name volumerize \
     -v jenkins_volume:/source:ro \
     -v volumerize_cache:/volumerize-cache \
-    -v volumerize_credentials:/credentials \
     -e "VOLUMERIZE_SOURCE=/source" \
     -e "VOLUMERIZE_TARGET=s3://s3.eu-central-1.amazonaws.com/duplicitytest" \
     -e "AWS_ACCESS_KEY_ID=QQWDQIWIDO1QO" \
