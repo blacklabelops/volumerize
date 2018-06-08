@@ -13,9 +13,13 @@ cat > ${JOBBER_SCRIPT_DIR}/periodicBackup <<_EOF_
 
 set -o errexit
 
+PREPOSTSTRATEGY=/preexecute/backup
+sourc ${VOLUMERIZE_SCRIPT_DIR}/prepoststrategy
 source ${VOLUMERIZE_SCRIPT_DIR}/stopContainers
 ${DUPLICITY_COMMAND} ${JOBBER_PARAMETER_PROXY} ${DUPLICITY_MODE} ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_SOURCE} ${VOLUMERIZE_TARGET}
 source ${VOLUMERIZE_SCRIPT_DIR}/startContainers
+PREPOSTSTRATEGY=/postexecute/backup
+source ${VOLUMERIZE_SCRIPT_DIR}/prepoststrategy
 _EOF_
 
 JOBBER_CRON_SCHEDULE='0 0 4 * * *'
