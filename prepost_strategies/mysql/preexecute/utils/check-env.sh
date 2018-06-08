@@ -6,8 +6,8 @@
  # @param1 - Name of the failed environment variable
  ##
 function _check_env_failed {
-    echo "[!] ENV VAR $1 IS NOT SET"
-    printf "\n====ENVIRONMENT VARIABLES FAILED====\n\n"
+    echo "Environment variable $1 is not set."
+    echo "Environment variables failed, exit 1"
     exit 1
 }
 
@@ -17,7 +17,7 @@ function _check_env_failed {
  # @param1 - Name of the environment variable
  ##
 function _check_env_ok {
-    echo "Env var $1 OK"
+    echo "Env var $1 ok."
 }
 
 ## 
@@ -26,7 +26,7 @@ function _check_env_ok {
  # @param2 to ∞ - Environment variables to check
  ##
 function check_env {
-    printf "\n====CHECKING ENVIRONMENT VARIABLES FOR $1====\n\n"
+    echo "Checking environment variables for $1."
 
     for e_var in "$@"; do
         if [ $e_var = $1 ]; then continue; fi # Jump first arg
@@ -39,5 +39,5 @@ function check_env {
         fi
 
     done
-    printf "\n====ENVIRONMENT VARIABLES OK====\n\n"
+    echo "Environment variables ok."
 }

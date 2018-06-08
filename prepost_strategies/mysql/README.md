@@ -42,7 +42,7 @@ services:
       - MYSQL_DATABASE=somedatabase
     volumes:
       - volumerize-cache:/volumerize-cache
-      - .backup:/backup
+      - backup:/backup
     depends_on:
       - mariadb
 
