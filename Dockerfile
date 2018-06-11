@@ -30,15 +30,15 @@ RUN apk upgrade --update && \
     pip install --upgrade pip && \
     pip install \
       PyDrive \
+      chardet \
       azure-storage \
       boto \
       lockfile \
-      mediafire \
       paramiko \
       pycryptopp \
       python-keystoneclient \
       python-swiftclient \
-      requests \
+      requests==2.14.2 \
       requests_oauthlib \
       urllib3 \
       dropbox==6.9.0 && \
