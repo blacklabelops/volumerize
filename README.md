@@ -438,7 +438,11 @@ This image creates at container startup some convenience scripts.
 | stopContainers | Stops the specified Docker containers |
 | remove-older-than | Delete older backups |
 | cleanCacheLocks | Cleanup of old Cache locks. |
-| prepoststrategy `$path` | Execute all `.sh` files in `$path` folder in alphabetical order. |
+| prepoststrategy `$execution_phase` `$duplicity_action` | Execute all `.sh` files for the specified exeuction phase and duplicity action in alphabetical order. |
+
+`$execution_phase` must be `preAction` or `postAction`.
+
+`$duplicity_action` must be `backup`, `verify` or `restpore`.
 
 Example triggering script inside running container:
 
