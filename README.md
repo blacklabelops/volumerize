@@ -407,13 +407,20 @@ $ docker run -d \
 
 # Post scripts and pre scripts (prepost strategies)
 
-If you mount a folder in `/prexecute` containing `.sh` files, they will be executed in alphabetical order before the backup and after the docker stop process.
 
-If you mount a folder in `/postexecute` containing `.sh` files, they will be executed in alphabetical order after the backup and before the docker start process.
+Pre-scripts must be located at `/preexecute/$duplicity_action/$your_scripts_here`.
 
-In this scripts the global variable `BACKUP_TYPE` contains the type of backup or restore, so it will contain one of this options `backup, backupIncremental, backupFull or restore` so you can customize your scripts to do one thing or another depending of the type of backup or if its a restore.
+Post-scripts must be located at `/postexecute/$duplicity_action/$your_scripts_here`.
 
-For an example and implementation for mysqldump and restore look at /prepost_strategies/mysql/README.md
+`$duplicity_action` folder must be named `backup`, `restore` or `verify`.
+
+> Note: `backup` action is the same for the scripts `backup`, `backupFull`, `backupIncremental` and `periodicBackup`.
+
+All `.sh` files located in the `$duplicity_action` folder will be executed in alphabetical order.
+
+When using prepost strategies, this will be the execution flow: `pre-scripts -> stop containers -> duplicity action -> start containers -> post-scripts`.
+
+Some premade strategies are available at [prepost strategies](prepost_strategies).
 
 # Container Scripts
 
@@ -431,8 +438,11 @@ This image creates at container startup some convenience scripts.
 | stopContainers | Stops the specified Docker containers |
 | remove-older-than | Delete older backups |
 | cleanCacheLocks | Cleanup of old Cache locks. |
-| prexecute | Execute all .sh files in /prexecute folder. |
-| postexecute | Execute all .sh files in /postexecute folder. |
+| prepoststrategy `$execution_phase` `$duplicity_action` | Execute all `.sh` files for the specified exeuction phase and duplicity action in alphabetical order. |
+
+`$execution_phase` must be `preAction` or `postAction`.
+
+`$duplicity_action` must be `backup`, `verify` or `restpore`.
 
 Example triggering script inside running container:
 
