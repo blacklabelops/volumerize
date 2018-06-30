@@ -1,4 +1,4 @@
-FROM gliderlabs/alpine:3.1
+FROM alpine:edge
 MAINTAINER Steffen Bleul <sbl@blacklabelops.com>
 
 ARG DUPLICITY_VERSION=latest
@@ -46,7 +46,8 @@ RUN apk upgrade --update && \
       requests==2.14.2 \
       requests_oauthlib \
       urllib3 \
-      dropbox==6.9.0 && \
+      dropbox==6.9.0 \
+      fasteners && \
     mkdir -p /etc/volumerize /volumerize-cache /opt/volumerize && \
     touch /etc/volumerize/remove-all-inc-of-but-n-full /etc/volumerize/remove-all-but-n-full /etc/volumerize/startContainers /etc/volumerize/stopContainers \
       /etc/volumerize/backup /etc/volumerize/backupIncremental /etc/volumerize/backupFull /etc/volumerize/restore \
