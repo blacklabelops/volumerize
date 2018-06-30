@@ -1,4 +1,4 @@
-FROM alpine:edge
+FROM alpine:3.7
 MAINTAINER Steffen Bleul <sbl@blacklabelops.com>
 
 ARG DUPLICITY_VERSION=latest
@@ -26,13 +26,17 @@ RUN apk upgrade --update && \
       musl-dev \
       rsync \
       lftp \
+      py-cryptography \
+      librsync \
+      librsync-dev \
+      python2-dev \
       py-pip && \
     # Install Duplicity
-    if  [ "${DUPLICITY_VERSION}" = "latest" ]; \
-      then apk add duplicity ; \
-      else apk add "duplicity=${DUPLICITY_VERSION}" ; \
-    fi && \
-    pip install --upgrade pip setuptools && \
+    #if  [ "${DUPLICITY_VERSION}" = "latest" ]; \
+    #  then apk add duplicity ; \
+    #  else apk add "duplicity=${DUPLICITY_VERSION}" ; \
+    # fi && \
+    pip install --upgrade pip setuptools duplicity && \
     pip install \
       PyDrive \
       chardet \
@@ -47,7 +51,8 @@ RUN apk upgrade --update && \
       requests_oauthlib \
       urllib3 \
       dropbox==6.9.0 \
-      fasteners && \
+      fasteners \
+      duplicity && \
     mkdir -p /etc/volumerize /volumerize-cache /opt/volumerize && \
     touch /etc/volumerize/remove-all-inc-of-but-n-full /etc/volumerize/remove-all-but-n-full /etc/volumerize/startContainers /etc/volumerize/stopContainers \
       /etc/volumerize/backup /etc/volumerize/backupIncremental /etc/volumerize/backupFull /etc/volumerize/restore \
