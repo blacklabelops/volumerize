@@ -1,4 +1,4 @@
-FROM blacklabelops/alpine:3.6
+FROM gliderlabs/alpine:3.1
 MAINTAINER Steffen Bleul <sbl@blacklabelops.com>
 
 ARG DUPLICITY_VERSION=latest
@@ -7,6 +7,11 @@ ARG DOCKER_VERSION=1.12.2
 
 RUN apk upgrade --update && \
     apk add \
+      build-base \
+      glib-dev \
+      gmp-dev \
+      asciidoc \
+      curl-dev \
       tzdata \
       openssh \
       openssl \
@@ -27,7 +32,7 @@ RUN apk upgrade --update && \
       then apk add duplicity ; \
       else apk add "duplicity=${DUPLICITY_VERSION}" ; \
     fi && \
-    pip install --upgrade pip && \
+    pip install --upgrade pip setuptools && \
     pip install \
       PyDrive \
       chardet \
@@ -96,6 +101,13 @@ RUN apk upgrade --update && \
     curl -fsSL https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-static -o /bin/tini && \
     echo 'Calculated checksum: '$(sha1sum /bin/tini) && \
     chmod +x /bin/tini && echo "$TINI_SHA  /bin/tini" | sha1sum -c - && \
+    # Install MEGAtools
+    curl -fSL "https://megatools.megous.com/builds/megatools-1.9.98.tar.gz" -o /tmp/megatools.tgz && \
+    tar -xzvf /tmp/megatools.tgz -C /tmp && \
+    cd /tmp/megatools-1.9.98 && \
+    ./configure && \
+    make && \
+    make install && \
     # Cleanup
     apk del \
       go \
