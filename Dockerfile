@@ -1,4 +1,4 @@
-FROM alpine:3.7
+FROM alpine:edge
 MAINTAINER Steffen Bleul <sbl@blacklabelops.com>
 
 ARG DUPLICITY_VERSION=latest
@@ -19,7 +19,6 @@ RUN apk upgrade --update && \
       ca-certificates \
       python-dev \
       libffi-dev \
-      openssl-dev \
       gcc \
       alpine-sdk \
       linux-headers \
