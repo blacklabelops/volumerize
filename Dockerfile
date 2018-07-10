@@ -1,4 +1,4 @@
-FROM blacklabelops/alpine:3.6
+FROM blacklabelops/alpine:3.8
 MAINTAINER Steffen Bleul <sbl@blacklabelops.com>
 
 ARG DUPLICITY_VERSION=latest
@@ -29,6 +29,7 @@ RUN apk upgrade --update && \
     fi && \
     pip install --upgrade pip && \
     pip install \
+      fasteners \
       PyDrive \
       chardet \
       azure-storage \
@@ -41,6 +42,7 @@ RUN apk upgrade --update && \
       requests==2.14.2 \
       requests_oauthlib \
       urllib3 \
+      b2 \
       dropbox==6.9.0 && \
     mkdir -p /etc/volumerize /volumerize-cache /opt/volumerize && \
     touch /etc/volumerize/remove-all-inc-of-but-n-full /etc/volumerize/remove-all-but-n-full /etc/volumerize/startContainers /etc/volumerize/stopContainers \
