@@ -433,6 +433,7 @@ This image creates at container startup some convenience scripts.
 | backup | Creates an backup with the containers configuration |
 | backupFull | Creates a full backup with the containers configuration |
 | backupIncremental | Creates an incremental backup with the containers configuration |
+| list | List all available backups |
 | verify | Compare the latest backup to your local files |
 | restore | Be Careful! Triggers an immediate force restore with the latest backup |
 | periodicBackup | Same script that will be triggered by the periodic schedule |
