@@ -5,7 +5,7 @@
 
 Blacklabelops backup and restore solution for Docker volume backups. It is based on the command line tool Duplicity. Dockerized and Parameterized for easier use and configuration.
 
-Always remember that this no wizard tool that can clone and backup data from running databases. You should always stop all containers running on your data before doing backups. Always make sure you're not victim of unexpected data corruption.
+This is not a tool that can clone and backup data from running databases. You should always stop all containers running on your data before doing backups. Always make sure you're not a victim of unexpected data corruption.
 
 Also note that the easier the tools the easier it is to lose data! Always make sure the tool works correct by checking the backup data itself, e.g. S3 bucket. Check the configuration double time and enable some check options this image offers. E.g. attaching volumes read only.
 
@@ -30,7 +30,7 @@ and many more: [Duplicity Supported Backends](http://duplicity.nongnu.org/index.
 
 Leave a message and ask questions on Hipchat: [blacklabelops/hipchat](http://support.blacklabelops.com)
 
-Maybe no one has ever told you, but munich developers run on beer! If you like my work, share a beer!
+Maybe no one has ever told you, but Munich developers run on beer! If you like my work, share a beer!
 
 [![BeerMe](https://raw.githubusercontent.com/ikkez/Beer-Donation-Button/gh-pages/img/beer_donation_button_single.png)](https://www.paypal.me/donateblacklabelops)
 
@@ -51,7 +51,7 @@ Google Drive: [Readme](https://github.com/blacklabelops/volumerize/tree/master/b
 You can make backups of your Docker application volume just by typing:
 
 ~~~~
-$ docker run -it --rm \
+$ docker run --rm \
     --name volumerize \
     -v yourvolume:/source:ro \
     -v backup_volume:/backup \
@@ -67,7 +67,7 @@ $ docker run -it --rm \
 
 The container has a default startup mode. Any specific behavior is done by defining envrionment variables at container startup (`docker run`). The default container behavior is to start in daemon mode and do incremental daily backups.
 
-You application data must be saved inside a Docker volume. You can list your volumes with the Docker command `docker volume ls`. You have to attach the volume to the backup container using the `-v` option. Choose an arbitrary name for the folder and add the `:ro`option to make the sources read only.
+Your application data must be saved inside a Docker volume. You can list your volumes with the Docker command `docker volume ls`. You have to attach the volume to the backup container using the `-v` option. Choose an arbitrary name for the folder and add the `:ro`option to make the sources read only.
 
 Example using Jenkins:
 
@@ -134,9 +134,9 @@ $ docker run -d \
 # Backup Restore
 
 A restore is simple. First stop your Volumerize container and start a another container with the same
-environment variables and the same volume but without read only mode! This is important in order to get the same directory structure as when you did your backup!
+environment variables and the same volume but without read-only mode! This is important in order to get the same directory structure as when you did your backup!
 
-Tip: Now add the read only option to your backup container!
+Tip: Now add the read-only option to your backup container!
 
 Example:
 
@@ -153,7 +153,7 @@ $ docker run -d \
     blacklabelops/volumerize
 ~~~~
 
-Then stop the backup container and restore with the following command. The only difference is that we exclude the read only option `:ro` from the source volume and added it to the backup volume:
+Then stop the backup container and restore with the following command. The only difference is that we exclude the read-only option `:ro` from the source volume and added it to the backup volume:
 
 ~~~~
 $ docker stop volumerize
@@ -197,7 +197,7 @@ $ docker run --rm \
 
 # Periodic Backups
 
-The default cron setting for this container is: `0 0 4 * * *`. That's four a clock in the morning UTC. You can set your own schedule with the environment variable `VOLUMERIZE_JOBBER_TIME`.
+The default cron setting for this container is: `0 0 4 * * *`. That's four o'clock in the morning UTC. You can set your own schedule with the environment variable `VOLUMERIZE_JOBBER_TIME`.
 
 You can set the time zone with the environment variable `TZ`.
 
@@ -211,14 +211,14 @@ $ docker run -d \
     -v jenkins_volume:/source:ro \
     -v backup_volume:/backup \
     -v cache_volume:/volumerize-cache \
-    -e "TZ=Europe/Berlin"
+    -e "TZ=Europe/Berlin" \
     -e "VOLUMERIZE_SOURCE=/source" \
     -e "VOLUMERIZE_TARGET=file:///backup" \
     -e "VOLUMERIZE_JOBBER_TIME=0 0 3 * * *" \
     blacklabelops/volumerize
 ~~~~
 
-> Backups three o'clock in the morning according to german local time.
+> Backups at three o'clock in the morning according to german local time.
 
 # Docker Container Restarts
 
@@ -385,7 +385,7 @@ The format is a number followed by one of the characters s, m, h, D, W, M, or Y.
 Examples:
 
 * After three Days: 3D
-* After one month: 1m
+* After one month: 1M
 * After 55 minutes: 55m
 
 Volumerize Example:
