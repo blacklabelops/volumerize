@@ -405,6 +405,8 @@ $ docker run -d \
 
 > Will enforce a full backup after seven days.
 
+For the difference between a full and incremental backup, see [Duplicity's documentation](http://duplicity.nongnu.org/duplicity.1.html).
+
 # Post scripts and pre scripts (prepost strategies)
 
 
