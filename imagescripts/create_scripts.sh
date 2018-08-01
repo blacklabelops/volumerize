@@ -106,6 +106,14 @@ set -o errexit
 exec ${DUPLICITY_COMMAND} cleanup ${PARAMETER_PROXY} ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_TARGET}
 _EOF_
 
+cat > ${VOLUMERIZE_SCRIPT_DIR}/list <<_EOF_
+#!/bin/bash
+
+set -o errexit
+
+exec ${DUPLICITY_COMMAND} collection-status ${PARAMETER_PROXY} ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_TARGET}
+_EOF_
+
 cat > ${VOLUMERIZE_SCRIPT_DIR}/remove-older-than <<_EOF_
 #!/bin/bash
 

@@ -169,6 +169,10 @@ $ docker start volumerize
 
 > Triggers a once time restore. The container for executing the restore command will be deleted afterwards
 
+You can restore from a particular backup by adding a time parameter to the command `restore`. For example, using `restore -t 3D` at the end in the above command will restore a backup from 3 days ago. See [the Duplicity manual](http://duplicity.nongnu.org/duplicity.1.html#sect8) to view the accepted time formats.
+
+To see the available backups, use the command `list` before doing a `restore`.
+
 ## Dry run
 
 You can pass the `--dry-run` parameter to the restore command in order to test the restore functionality:
@@ -433,6 +437,7 @@ This image creates at container startup some convenience scripts.
 | backup | Creates an backup with the containers configuration |
 | backupFull | Creates a full backup with the containers configuration |
 | backupIncremental | Creates an incremental backup with the containers configuration |
+| list | List all available backups |
 | verify | Compare the latest backup to your local files |
 | restore | Be Careful! Triggers an immediate force restore with the latest backup |
 | periodicBackup | Same script that will be triggered by the periodic schedule |
