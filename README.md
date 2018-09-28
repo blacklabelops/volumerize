@@ -444,7 +444,7 @@ Under the hood blacklabelops/volumerize uses duplicity. To pass script parameter
 | periodicBackup | Same script that will be triggered by the periodic schedule |
 | startContainers | Starts the specified Docker containers |
 | stopContainers | Stops the specified Docker containers |
-| remove-older-than | Delete older backups [Time format](http://duplicity.nongnu.org/duplicity.1.html#toc8)|
+| remove-older-than | Delete older backups ([Time formats](http://duplicity.nongnu.org/duplicity.1.html#toc8))|
 | cleanCacheLocks | Cleanup of old Cache locks. |
 | prepoststrategy `$execution_phase` `$duplicity_action` | Execute all `.sh` files for the specified exeuction phase and duplicity action in alphabetical order. |
 
