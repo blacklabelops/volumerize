@@ -431,6 +431,7 @@ Some premade strategies are available at [prepost strategies](prepost_strategies
 # Container Scripts
 
 This image creates at container startup some convenience scripts.
+Under the hood blacklabelops/volumerize uses duplicity. To pass script parameters, see here for duplicity command line options: [Duplicity CLI Options](http://duplicity.nongnu.org/duplicity.1.html#sect5)
 
 | Script | Description |
 |--------|-------------|
@@ -443,7 +444,7 @@ This image creates at container startup some convenience scripts.
 | periodicBackup | Same script that will be triggered by the periodic schedule |
 | startContainers | Starts the specified Docker containers |
 | stopContainers | Stops the specified Docker containers |
-| remove-older-than | Delete older backups |
+| remove-older-than | Delete older backups ([Time formats](http://duplicity.nongnu.org/duplicity.1.html#toc8))|
 | cleanCacheLocks | Cleanup of old Cache locks. |
 | prepoststrategy `$execution_phase` `$duplicity_action` | Execute all `.sh` files for the specified exeuction phase and duplicity action in alphabetical order. |
 
@@ -459,17 +460,14 @@ $ docker exec volumerize backup
 
 > Executes script `backup` inside container with name `volumerize`
 
-Passing script parameters:
-
-Under the hood blacklabelops/volumerize uses duplicity. See here for duplicity command line options: [Duplicity CLI Options](http://duplicity.nongnu.org/duplicity.1.html#sect5)
-
-Example:
+Example passing script parameter:
 
 ~~~~
 $ docker exec volumerize backup --dry-run
 ~~~~
 
 > `--dry-run` will simulate not execute the backup procedure.
+
 
 # Build The Project
 
