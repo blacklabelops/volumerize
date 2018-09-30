@@ -13,7 +13,7 @@ DUPLICITY_TARGET=${VOLUMERIZE_TARGET}
 DUPLICITY_MODE=""
 
 function resolveOptions() {
-  DUPLICITY_OPTIONS="--allow-source-mismatch --archive-dir=${VOLUMERIZE_CACHE}"
+  DUPLICITY_OPTIONS="--allow-source-mismatch"
   if [ -n "${VOLUMERIZE_DUPLICITY_OPTIONS}" ]; then
     DUPLICITY_OPTIONS=$DUPLICITY_OPTIONS" "${VOLUMERIZE_DUPLICITY_OPTIONS}
   fi

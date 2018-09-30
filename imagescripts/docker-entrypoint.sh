@@ -36,7 +36,8 @@ if [ -n "${VOLUMERIZE_DELAYED_START}" ]; then
   sleep ${VOLUMERIZE_DELAYED_START}
 fi
 
-if [ -n "${VOLUMERIZE_SOURCE}" ]; then
+#if [ -n "${VOLUMERIZE_SOURCE}" ]; then
+if [ `env | grep VOLUMERIZE_SOURCE | wc -l` -gt 0 ]; then
   source $CUR_DIR/create_scripts.sh
   source $CUR_DIR/create_jobber.sh
   source $CUR_DIR/create_docker_scripts.sh
