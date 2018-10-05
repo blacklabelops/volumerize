@@ -1,9 +1,10 @@
 FROM blacklabelops/alpine:3.8
 MAINTAINER Steffen Bleul <sbl@blacklabelops.com>
 
-ARG DUPLICITY_VERSION=latest
 ARG JOBBER_VERSION=1.1
 ARG DOCKER_VERSION=1.12.2
+ARG DUPLICITY_VERSION=0.7.18
+ARG DUPLICITY_SERIES=0.7
 
 RUN apk upgrade --update && \
     apk add \
@@ -15,18 +16,15 @@ RUN apk upgrade --update && \
       python-dev \
       libffi-dev \
       openssl-dev \
+      librsync-dev \
       gcc \
       alpine-sdk \
       linux-headers \
       musl-dev \
       rsync \
       lftp \
-      py-pip && \
-    # Install Duplicity
-    if  [ "${DUPLICITY_VERSION}" = "latest" ]; \
-      then apk add duplicity ; \
-      else apk add "duplicity=${DUPLICITY_VERSION}" ; \
-    fi && \
+      py-pip \
+      duplicity && \
     pip install --upgrade pip && \
     pip install \
       fasteners \
@@ -52,9 +50,15 @@ RUN apk upgrade --update && \
     chmod +x /etc/volumerize/remove-all-inc-of-but-n-full /etc/volumerize/remove-all-but-n-full /etc/volumerize/startContainers /etc/volumerize/stopContainers \
       /etc/volumerize/backup /etc/volumerize/backupIncremental /etc/volumerize/backupFull /etc/volumerize/restore \
       /etc/volumerize/periodicBackup /etc/volumerize/verify /etc/volumerize/cleanup /etc/volumerize/remove-older-than /etc/volumerize/cleanCacheLocks \
-      /etc/volumerize/prepoststrategy /etc/volumerize/list && \
+      /etc/volumerize/prepoststrategy /etc/volumerize/list
+RUN curl -fSL "https://code.launchpad.net/duplicity/${DUPLICITY_SERIES}-series/${DUPLICITY_VERSION}/+download/duplicity-${DUPLICITY_VERSION}.tar.gz" -o /tmp/duplicity.tar.gz && \
+    export DUPLICITY_SHA=75940a82b7887846778633bc6256913df7834c5afdc8d75c54018f42b0e79b1048cd8807c00092b93d1504ac4850ba3426cb96307eadd89e59ad18e54ded3780 && \
+    echo 'Calculated checksum: '$(sha512sum /tmp/duplicity.tar.gz) && \
+    echo "$DUPLICITY_SHA  /tmp/duplicity.tar.gz" | sha512sum -c - && \
+    tar -xzvf /tmp/duplicity.tar.gz -C /tmp && \
+    cd /tmp/duplicity-${DUPLICITY_VERSION} && python setup.py install
     # Install Jobber
-    export JOBBER_HOME=/tmp/jobber && \
+RUN export JOBBER_HOME=/tmp/jobber && \
     export JOBBER_LIB=$JOBBER_HOME/lib && \
     export GOPATH=$JOBBER_LIB && \
     export CONTAINER_UID=1000 && \
@@ -92,12 +96,6 @@ RUN apk upgrade --update && \
     echo "$DOCKER_SHA  /tmp/docker.tgz" | sha1sum -c - && \
 	  tar -xzvf /tmp/docker.tgz -C /tmp && \
 	  cp /tmp/docker/docker /usr/local/bin/ && \
-    # Install Tini Zombie Reaper And Signal Forwarder
-    export TINI_VERSION=0.9.0 && \
-    export TINI_SHA=fa23d1e20732501c3bb8eeeca423c89ac80ed452 && \
-    curl -fsSL https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-static -o /bin/tini && \
-    echo 'Calculated checksum: '$(sha1sum /bin/tini) && \
-    chmod +x /bin/tini && echo "$TINI_SHA  /bin/tini" | sha1sum -c - && \
     # Cleanup
     apk del \
       go \
@@ -112,6 +110,7 @@ RUN apk upgrade --update && \
       linux-headers \
       gcc \
       musl-dev \
+      librsync-dev \
       make && \
     apk add \
         openssl && \
@@ -128,5 +127,5 @@ USER root
 WORKDIR /etc/volumerize
 VOLUME ["/volumerize-cache"]
 COPY imagescripts/*.sh /opt/volumerize/
-ENTRYPOINT ["/bin/tini","--","/opt/volumerize/docker-entrypoint.sh"]
+ENTRYPOINT ["/sbin/tini","--","/opt/volumerize/docker-entrypoint.sh"]
 CMD ["volumerize"]
