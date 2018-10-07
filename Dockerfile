@@ -3,7 +3,7 @@ MAINTAINER Steffen Bleul <sbl@blacklabelops.com>
 
 ARG JOBBER_VERSION=1.1
 ARG DOCKER_VERSION=1.12.2
-ARG DUPLICITY_VERSION=0.7.18
+ARG DUPLICITY_VERSION=0.7.18.1
 ARG DUPLICITY_SERIES=0.7
 
 RUN apk upgrade --update && \
@@ -52,7 +52,7 @@ RUN apk upgrade --update && \
       /etc/volumerize/periodicBackup /etc/volumerize/verify /etc/volumerize/cleanup /etc/volumerize/remove-older-than /etc/volumerize/cleanCacheLocks \
       /etc/volumerize/prepoststrategy /etc/volumerize/list
 RUN curl -fSL "https://code.launchpad.net/duplicity/${DUPLICITY_SERIES}-series/${DUPLICITY_VERSION}/+download/duplicity-${DUPLICITY_VERSION}.tar.gz" -o /tmp/duplicity.tar.gz && \
-    export DUPLICITY_SHA=75940a82b7887846778633bc6256913df7834c5afdc8d75c54018f42b0e79b1048cd8807c00092b93d1504ac4850ba3426cb96307eadd89e59ad18e54ded3780 && \
+    export DUPLICITY_SHA=6c783aeb73ada7d2412a3ef891bf98c8072b7ce040fe23a33956159a21f3cfea4e6a943c4e803e2cd9e8b8cd42e4b8e28004ab82fb50625ff20aafd42f23bc8a && \
     echo 'Calculated checksum: '$(sha512sum /tmp/duplicity.tar.gz) && \
     echo "$DUPLICITY_SHA  /tmp/duplicity.tar.gz" | sha512sum -c - && \
     tar -xzvf /tmp/duplicity.tar.gz -C /tmp && \
