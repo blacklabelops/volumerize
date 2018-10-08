@@ -6,11 +6,11 @@ You have to perform the following steps:
 
 Login to Backblaze B2 and create an application key.
 
-The Amazon developers console: [Amazon Developers Console](https://aws.amazon.com/console/)
+The Backblaze B2 Buckets (select `Show Account ID and Application Key`): [B2 Cloud Storage Buckets](https://secure.backblaze.com/b2_buckets.htm)
 
 Remember the following details:
 
-* The account id.
+* The application key ID.
 * The application key.
 * The bucket name.
 
@@ -38,11 +38,11 @@ $ docker run -d \
     -v volumerize_cache:/volumerize-cache \
     -v jenkins_volume:/source:ro \
     -e "VOLUMERIZE_SOURCE=/source" \
-    -e "VOLUMERIZE_TARGET=b2://23412331:fwkejf1ij122312mkm@volumerizetest/" \
+    -e "VOLUMERIZE_TARGET=b2://003945h951emn6p0000000001:H006yG2V7+pogtolEFwCexcZUWJdkNc@volumerizetest/" \
     blacklabelops/volumerize
 ~~~~
 
-> Will backup to account id 23412331 using application key fwkejf1ij122312mkm inside bucket volumerizetest.
+> Will backup to application id 003945h951emn6p0000000001 using application key H006yG2V7+pogtolEFwCexcZUWJdkNc inside bucket volumerizetest.
 
 Start the first backup:
 
@@ -61,7 +61,7 @@ $ docker run --rm \
     -v jenkins_test_restore:/source \
     -v volumerize_cache:/volumerize-cache \
     -e "VOLUMERIZE_SOURCE=/source" \
-    -e "VOLUMERIZE_TARGET=b2://23412331:fwkejf1ij122312mkm@volumerizetest/" \
+    -e "VOLUMERIZE_TARGET=b2://003945h951emn6p0000000001:H006yG2V7+pogtolEFwCexcZUWJdkNc@volumerizetest/" \
     blacklabelops/volumerize restore
 ~~~~
 
@@ -84,7 +84,7 @@ $ docker run --rm \
     -v jenkins_test_restore:/source \
     -v volumerize_cache:/volumerize-cache \
     -e "VOLUMERIZE_SOURCE=/source" \
-    -e "VOLUMERIZE_TARGET=b2://23412331:fwkejf1ij122312mkm@volumerizetest/" \
+    -e "VOLUMERIZE_TARGET=b2://003945h951emn6p0000000001:H006yG2V7+pogtolEFwCexcZUWJdkNc@volumerizetest/" \
     blacklabelops/volumerize verify
 ~~~~
 
@@ -114,7 +114,7 @@ $ docker run -d \
     -v jenkins_volume:/source:ro \
     -v volumerize_cache:/volumerize-cache \
     -e "VOLUMERIZE_SOURCE=/source" \
-    -e "VOLUMERIZE_TARGET=b2://23412331:fwkejf1ij122312mkm@volumerizetest/" \
+    -e "VOLUMERIZE_TARGET=b2://003945h951emn6p0000000001:H006yG2V7+pogtolEFwCexcZUWJdkNc@volumerizetest/" \
     -e "VOLUMERIZE_CONTAINERS=jenkins" \
     -v /var/run/docker.sock:/var/run/docker.sock \
     blacklabelops/volumerize
