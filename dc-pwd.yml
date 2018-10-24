@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  volumerize:
+    depends_on:
+      - jenkins
+    image: blacklabelops/volumerize
+    container_name: volumerize
+    volumes:
+      - jenkins_volume:/source
+      - backup_volume:/backup
+      - cache_volume:/volumerize-cache
+    environment:
+      - 'VOLUMERIZE_SOURCE=/source'
+      - 'VOLUMERIZE_TARGET=file:///backup'
+
+  jenkins:
+    image: blacklabelops/jenkins
+    container_name: jenkins
+    volumes:
+      - jenkins_volume:/jenkins
+    ports:
+      - '80:8080'
+
+volumes:
+  jenkins_volume:
+    external: false
+  backup_volume:
+    external: false
+  cache_volume:
+    external: false
