@@ -42,15 +42,7 @@ RUN apk upgrade --update && \
       urllib3 \
       b2 \
       dropbox==6.9.0 && \
-    mkdir -p /etc/volumerize /volumerize-cache /opt/volumerize && \
-    touch /etc/volumerize/remove-all-inc-of-but-n-full /etc/volumerize/remove-all-but-n-full /etc/volumerize/startContainers /etc/volumerize/stopContainers \
-      /etc/volumerize/backup /etc/volumerize/backupIncremental /etc/volumerize/backupFull /etc/volumerize/restore \
-      /etc/volumerize/periodicBackup /etc/volumerize/verify /etc/volumerize/cleanup /etc/volumerize/remove-older-than /etc/volumerize/cleanCacheLocks \
-      /etc/volumerize/prepoststrategy /etc/volumerize/list && \
-    chmod +x /etc/volumerize/remove-all-inc-of-but-n-full /etc/volumerize/remove-all-but-n-full /etc/volumerize/startContainers /etc/volumerize/stopContainers \
-      /etc/volumerize/backup /etc/volumerize/backupIncremental /etc/volumerize/backupFull /etc/volumerize/restore \
-      /etc/volumerize/periodicBackup /etc/volumerize/verify /etc/volumerize/cleanup /etc/volumerize/remove-older-than /etc/volumerize/cleanCacheLocks \
-      /etc/volumerize/prepoststrategy /etc/volumerize/list
+    mkdir -p /etc/volumerize /volumerize-cache /opt/volumerize
 RUN curl -fSL "https://code.launchpad.net/duplicity/${DUPLICITY_SERIES}-series/${DUPLICITY_VERSION}/+download/duplicity-${DUPLICITY_VERSION}.tar.gz" -o /tmp/duplicity.tar.gz && \
     export DUPLICITY_SHA=7fb477b1bbbfe060daf130a5b0518a53b7c6e6705e5459c191fb44c8a723c9a5e2126db98544951ffb807a5de7e127168cba165a910f962ed055d74066f0faa5 && \
     echo 'Calculated checksum: '$(sha512sum /tmp/duplicity.tar.gz) && \
@@ -118,6 +110,7 @@ RUN export JOBBER_HOME=/tmp/jobber && \
 
 ENV VOLUMERIZE_HOME=/etc/volumerize \
     VOLUMERIZE_CACHE=/volumerize-cache \
+    VOLUMERIZE_SCRIPT_DIR=/opt/volumerize \
     PATH=$PATH:/etc/volumerize \
     GOOGLE_DRIVE_SETTINGS=/credentials/cred.file \
     GOOGLE_DRIVE_CREDENTIAL_FILE=/credentials/googledrive.cred \
@@ -126,6 +119,7 @@ ENV VOLUMERIZE_HOME=/etc/volumerize \
 USER root
 WORKDIR /etc/volumerize
 VOLUME ["/volumerize-cache"]
-COPY imagescripts/*.sh /opt/volumerize/
+COPY imagescripts/ /opt/volumerize/
+COPY scripts/ /etc/volumerize/
 ENTRYPOINT ["/sbin/tini","--","/opt/volumerize/docker-entrypoint.sh"]
 CMD ["volumerize"]

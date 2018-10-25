@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -o errexit
+
+[[ ${DEBUG} == true ]] && set -x
+
+source /opt/volumerize/base.sh
+
+exec ${DUPLICITY_COMMAND} cleanup $@ ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_TARGET}

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -o errexit
+
+[[ ${DEBUG} == true ]] && set -x
+
+source /opt/volumerize/base.sh
+
+exec ${DUPLICITY_COMMAND} remove-all-inc-of-but-n-full $@ ${DUPLICITY_OPTIONS} ${VOLUMERIZE_TARGET}

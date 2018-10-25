@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -o errexit
+
+[[ ${DEBUG} == true ]] && set -x
+
+source /opt/volumerize/base.sh
+
+${VOLUMERIZE_SCRIPT_DIR}/prepoststrategy preAction backup
+source ${VOLUMERIZE_SCRIPT_DIR}/stopContainers.sh
+${DUPLICITY_COMMAND} full $@ ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_SOURCE} ${VOLUMERIZE_TARGET} || true
+source ${VOLUMERIZE_SCRIPT_DIR}/startContainers.sh
+${VOLUMERIZE_SCRIPT_DIR}/prepoststrategy postAction backup

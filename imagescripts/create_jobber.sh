@@ -6,20 +6,6 @@ readonly JOBBER_SCRIPT_DIR=$VOLUMERIZE_HOME
 
 source $CUR_DIR/base.sh
 
-readonly JOBBER_PARAMETER_PROXY='$@'
-
-cat > ${JOBBER_SCRIPT_DIR}/periodicBackup <<_EOF_
-#!/bin/bash
-
-set -o errexit
-
-${VOLUMERIZE_SCRIPT_DIR}/prepoststrategy preAction backup
-source ${VOLUMERIZE_SCRIPT_DIR}/stopContainers
-${DUPLICITY_COMMAND} ${JOBBER_PARAMETER_PROXY} ${DUPLICITY_MODE} ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_SOURCE} ${VOLUMERIZE_TARGET}
-source ${VOLUMERIZE_SCRIPT_DIR}/startContainers
-${VOLUMERIZE_SCRIPT_DIR}/prepoststrategy postAction backup
-_EOF_
-
 JOBBER_CRON_SCHEDULE='0 0 4 * * *'
 
 if [ -n "${VOLUMERIZE_JOBBER_TIME}" ]; then

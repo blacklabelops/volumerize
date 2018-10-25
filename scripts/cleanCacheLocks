@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -o errexit
+
+[[ ${DEBUG} == true ]] && set -x
+
+source /opt/volumerize/base.sh
+
+find /volumerize-cache/ -maxdepth 2 -type f -name lockfile.lock | while read filename ; do fuser -s $filename || rm -fv $filename ; done

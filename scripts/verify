@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -o errexit
+
+[[ ${DEBUG} == true ]] && set -x
+
+source /opt/volumerize/base.sh
+
+${VOLUMERIZE_SCRIPT_DIR}/prepoststrategy preAction verify
+${DUPLICITY_COMMAND} verify --compare-data $@ ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_TARGET} ${VOLUMERIZE_SOURCE}
+${VOLUMERIZE_SCRIPT_DIR}/prepoststrategy postAction verify
