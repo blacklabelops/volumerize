@@ -1,5 +1,6 @@
 # Blacklabelops Volumerize
 
+[![Circle CI](https://circleci.com/gh/blacklabelops/volumerize.svg?style=shield)](https://circleci.com/gh/blacklabelops/volumerize)
 [![Open Issues](https://img.shields.io/github/issues/blacklabelops/volumerize.svg)](https://github.com/blacklabelops/volumerize/issues) [![Stars on GitHub](https://img.shields.io/github/stars/blacklabelops/volumerize.svg)](https://github.com/blacklabelops/volumerize/stargazers)
 [![Docker Stars](https://img.shields.io/docker/stars/blacklabelops/volumerize.svg)](https://hub.docker.com/r/blacklabelops/volumerize/) [![Docker Pulls](https://img.shields.io/docker/pulls/blacklabelops/volumerize.svg)](https://hub.docker.com/r/blacklabelops/volumerize/)
 
@@ -474,6 +475,53 @@ $ docker exec volumerize backup --dry-run
 # Build The Project
 
 Check out the project at Github.
+
+# Multiple Backups
+
+You can specify multiple backup jobs with one container with enumerated environment variables. Each environment variable must be followed by a number starting with 1. Example `VOLUMERIZE_SOURCE1`, `VOLUMERIZE_SOURCE2` or `VOLUMERIZE_SOURCE3`.
+
+The following environment variables can be enumerated:
+
+* VOLUMERIZE_SOURCE
+* VOLUMERIZE_TARGET
+* VOLUMERIZE_CACHE
+* VOLUMERIZE_INCLUDE
+
+When using multiple backup jobs you will have to specify a cache directory for each backup. The minimum required environment variables for each job is:
+
+* VOLUMERIZE_SOURCE
+* VOLUMERIZE_TARGET
+* VOLUMERIZE_CACHE
+
+Also the included helper scripts will change their behavior when you use enumerated environment variables. By default each script will run on all backup jobs.
+
+Example: Executing the script `backup` will backup all jobs.
+
+The first parameter of each script can be a job number, e.g. `1`, `2` or `3`.
+
+Example: Executing the script `backup 1` will only trigger backup on job 1.
+
+Full example for multiple job specifications:
+
+~~~~
+$ docker run -d \
+    --name volumerize \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v jenkins_volume:/source:ro \
+    -v jenkins_volume2:/source2:ro \
+    -v backup_volume:/backup \
+    -v backup_volume2:/backup2 \
+    -v cache_volume:/volumerize-cache \
+    -v cache_volume2:/volumerize-cache2 \
+    -e "VOLUMERIZE_CONTAINERS=jenkins jenkins2" \
+    -e "VOLUMERIZE_SOURCE1=/source" \
+    -e "VOLUMERIZE_TARGET1=file:///backup" \
+    -e "VOLUMERIZE_CACHE1=/volumerize-cache" \
+    -e "VOLUMERIZE_SOURCE2=/source2" \
+    -e "VOLUMERIZE_TARGET2=file:///backup2" \
+    -e "VOLUMERIZE_CACHE2=/volumerize-cache2" \
+    blacklabelops/volumerize
+~~~~
 
 ## Build the Image
 
