@@ -6,8 +6,15 @@ set -o errexit
 
 source /opt/volumerize/base.sh
 
+DUPLICITY_RETURN_CODE=0
+
+function restore() {
+  ${DUPLICITY_COMMAND} restore --force $@ ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_TARGET} ${VOLUMERIZE_SOURCE} || DUPLICITY_RETURN_CODE=$? && true ;
+}
+
 ${VOLUMERIZE_SCRIPT_DIR}/prepoststrategy preAction restore
 source ${VOLUMERIZE_SCRIPT_DIR}/stopContainers.sh
-${DUPLICITY_COMMAND} restore --force $@ ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_TARGET} ${VOLUMERIZE_SOURCE} || true
+restore $@
 source ${VOLUMERIZE_SCRIPT_DIR}/startContainers.sh
 ${VOLUMERIZE_SCRIPT_DIR}/prepoststrategy postAction restore
+exit $DUPLICITY_RETURN_CODE

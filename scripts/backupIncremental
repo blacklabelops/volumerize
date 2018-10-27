@@ -6,8 +6,15 @@ set -o errexit
 
 source /opt/volumerize/base.sh
 
+DUPLICITY_RETURN_CODE=0
+
+function backupIncremental() {
+  ${DUPLICITY_COMMAND} incremental $@ ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_SOURCE} ${VOLUMERIZE_TARGET} || DUPLICITY_RETURN_CODE=$? && true ;
+}
+
 ${VOLUMERIZE_SCRIPT_DIR}/prepoststrategy preAction backup
 source ${VOLUMERIZE_SCRIPT_DIR}/stopContainers.sh
-${DUPLICITY_COMMAND} incremental $@ ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_SOURCE} ${VOLUMERIZE_TARGET} || true
+backupIncremental $@
 source ${VOLUMERIZE_SCRIPT_DIR}/startContainers.sh
 ${VOLUMERIZE_SCRIPT_DIR}/prepoststrategy postAction backup
+exit $DUPLICITY_RETURN_CODE
