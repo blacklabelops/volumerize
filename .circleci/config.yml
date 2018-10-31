@@ -1,0 +1,82 @@
+version: 2
+jobs:
+  build_branch:
+    working_directory: /app
+    docker:
+      - image: docker:17.05.0-ce-git
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --no-cache \
+              py-pip \
+              curl \
+              curl-dev
+            pip install \
+              docker-compose
+      - run:
+          name: Build Branch Images
+          command: |
+            set +o pipefail
+            sh buildscripts/buildSupportedAlpineImages.sh
+      - run:
+          name: Test Branch Images
+          command: |
+              sh buildscripts/testSupportedAlpineImages.sh
+
+  build_releases:
+    working_directory: /app
+    docker:
+      - image: docker:17.05.0-ce-git
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --no-cache \
+              py-pip \
+              curl \
+              curl-dev
+            pip install \
+              docker-compose
+      - run:
+          name: Build Docker Release Images
+          command: |
+            set +o pipefail
+            sh buildscripts/buildSupportedAlpineImages.sh
+      - run:
+          name: Test Docker Release Images
+          command: |
+            sh buildscripts/testSupportedAlpineImages.sh
+      - run:
+          name: Push Dockerhub Release Images
+          command: |
+              docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
+              sh buildscripts/releaseSupportedAlpineImages.sh
+
+workflows:
+  version: 2
+  build_pipeline:
+    jobs:
+      - build_releases:
+          filters:
+            branches:
+              only: master
+      - build_branch:
+          filters:
+            branches:
+              ignore:
+                - master
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 1 * * 1"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - build_releases

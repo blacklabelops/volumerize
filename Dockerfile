@@ -1,9 +1,10 @@
-FROM alpine:edge
+FROM blacklabelops/alpine:3.8
 MAINTAINER Steffen Bleul <sbl@blacklabelops.com>
 
-ARG DUPLICITY_VERSION=latest
 ARG JOBBER_VERSION=1.1
 ARG DOCKER_VERSION=1.12.2
+ARG DUPLICITY_VERSION=0.7.18.2
+ARG DUPLICITY_SERIES=0.7
 
 RUN apk upgrade --update && \
     apk add \
@@ -19,6 +20,8 @@ RUN apk upgrade --update && \
       ca-certificates \
       python-dev \
       libffi-dev \
+      openssl-dev \
+      librsync-dev \
       gcc \
       alpine-sdk \
       linux-headers \
@@ -30,13 +33,11 @@ RUN apk upgrade --update && \
       librsync-dev \
       python2-dev \
       py-pip && \
-    # Install Duplicity
-    #if  [ "${DUPLICITY_VERSION}" = "latest" ]; \
-    #  then apk add duplicity ; \
-    #  else apk add "duplicity=${DUPLICITY_VERSION}" ; \
-    # fi && \
-    pip install --upgrade pip setuptools duplicity && \
+    pip install --upgrade pip && \
     pip install \
+      setuptools \
+      duplicity \
+      fasteners \
       PyDrive \
       chardet \
       azure-storage \
@@ -49,20 +50,17 @@ RUN apk upgrade --update && \
       requests==2.14.2 \
       requests_oauthlib \
       urllib3 \
-      dropbox==6.9.0 \
-      fasteners \
-      duplicity && \
-    mkdir -p /etc/volumerize /volumerize-cache /opt/volumerize && \
-    touch /etc/volumerize/remove-all-inc-of-but-n-full /etc/volumerize/remove-all-but-n-full /etc/volumerize/startContainers /etc/volumerize/stopContainers \
-      /etc/volumerize/backup /etc/volumerize/backupIncremental /etc/volumerize/backupFull /etc/volumerize/restore \
-      /etc/volumerize/periodicBackup /etc/volumerize/verify /etc/volumerize/cleanup /etc/volumerize/remove-older-than /etc/volumerize/cleanCacheLocks \
-      /etc/volumerize/prepoststrategy && \
-    chmod +x /etc/volumerize/remove-all-inc-of-but-n-full /etc/volumerize/remove-all-but-n-full /etc/volumerize/startContainers /etc/volumerize/stopContainers \
-      /etc/volumerize/backup /etc/volumerize/backupIncremental /etc/volumerize/backupFull /etc/volumerize/restore \
-      /etc/volumerize/periodicBackup /etc/volumerize/verify /etc/volumerize/cleanup /etc/volumerize/remove-older-than /etc/volumerize/cleanCacheLocks \
-      /etc/volumerize/prepoststrategy && \
+      b2 \
+      dropbox==6.9.0 && \
+    mkdir -p /etc/volumerize /volumerize-cache /opt/volumerize
+RUN curl -fSL "https://code.launchpad.net/duplicity/${DUPLICITY_SERIES}-series/${DUPLICITY_VERSION}/+download/duplicity-${DUPLICITY_VERSION}.tar.gz" -o /tmp/duplicity.tar.gz && \
+    export DUPLICITY_SHA=7fb477b1bbbfe060daf130a5b0518a53b7c6e6705e5459c191fb44c8a723c9a5e2126db98544951ffb807a5de7e127168cba165a910f962ed055d74066f0faa5 && \
+    echo 'Calculated checksum: '$(sha512sum /tmp/duplicity.tar.gz) && \
+    # echo "$DUPLICITY_SHA  /tmp/duplicity.tar.gz" | sha512sum -c - && \
+    tar -xzvf /tmp/duplicity.tar.gz -C /tmp && \
+    cd /tmp/duplicity-${DUPLICITY_VERSION} && python setup.py install
     # Install Jobber
-    export JOBBER_HOME=/tmp/jobber && \
+RUN export JOBBER_HOME=/tmp/jobber && \
     export JOBBER_LIB=$JOBBER_HOME/lib && \
     export GOPATH=$JOBBER_LIB && \
     export CONTAINER_UID=1000 && \
@@ -100,12 +98,6 @@ RUN apk upgrade --update && \
     echo "$DOCKER_SHA  /tmp/docker.tgz" | sha1sum -c - && \
 	  tar -xzvf /tmp/docker.tgz -C /tmp && \
 	  cp /tmp/docker/docker /usr/local/bin/ && \
-    # Install Tini Zombie Reaper And Signal Forwarder
-    export TINI_VERSION=0.9.0 && \
-    export TINI_SHA=fa23d1e20732501c3bb8eeeca423c89ac80ed452 && \
-    curl -fsSL https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-static -o /bin/tini && \
-    echo 'Calculated checksum: '$(sha1sum /bin/tini) && \
-    chmod +x /bin/tini && echo "$TINI_SHA  /bin/tini" | sha1sum -c - && \
     # Install MEGAtools
     curl -fSL "https://megatools.megous.com/builds/megatools-1.9.98.tar.gz" -o /tmp/megatools.tgz && \
     tar -xzvf /tmp/megatools.tgz -C /tmp && \
@@ -127,6 +119,7 @@ RUN apk upgrade --update && \
       linux-headers \
       gcc \
       musl-dev \
+      librsync-dev \
       make && \
     apk add \
         openssl && \
@@ -134,6 +127,7 @@ RUN apk upgrade --update && \
 
 ENV VOLUMERIZE_HOME=/etc/volumerize \
     VOLUMERIZE_CACHE=/volumerize-cache \
+    VOLUMERIZE_SCRIPT_DIR=/opt/volumerize \
     PATH=$PATH:/etc/volumerize \
     GOOGLE_DRIVE_SETTINGS=/credentials/cred.file \
     GOOGLE_DRIVE_CREDENTIAL_FILE=/credentials/googledrive.cred \
@@ -142,6 +136,7 @@ ENV VOLUMERIZE_HOME=/etc/volumerize \
 USER root
 WORKDIR /etc/volumerize
 VOLUME ["/volumerize-cache"]
-COPY imagescripts/*.sh /opt/volumerize/
-ENTRYPOINT ["/bin/tini","--","/opt/volumerize/docker-entrypoint.sh"]
+COPY imagescripts/ /opt/volumerize/
+COPY scripts/ /etc/volumerize/
+ENTRYPOINT ["/sbin/tini","--","/opt/volumerize/docker-entrypoint.sh"]
 CMD ["volumerize"]

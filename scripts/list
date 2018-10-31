@@ -1,0 +1,43 @@
+#!/bin/bash
+
+set -o errexit
+
+[[ ${DEBUG} == true ]] && set -x
+
+source /opt/volumerize/base.sh
+
+DUPLICITY_RETURN_CODE=0
+
+function commandLoop() {
+  local jobcount=$JOB_COUNT
+  local counter;
+
+  for (( counter=1; counter<=$jobcount; counter++ ))
+  do
+    commandJob "$counter" $@
+  done
+}
+
+function commandJob() {
+  local jobNumber=$1
+  local returnCode=0;
+  prepareJob "$jobNumber"
+  shift;
+  ${DUPLICITY_JOB_COMMAND} collection-status $@ ${DUPLICITY_JOB_OPTIONS} ${VOLUMERIZE_JOB_INCUDES} ${VOLUMERIZE_JOB_TARGET} || returnCode=$? && true ;
+  if [ "$returnCode" -gt "$DUPLICITY_RETURN_CODE" ]; then
+    DUPLICITY_RETURN_CODE=$returnCode
+  fi
+}
+
+function commandExecution() {
+  if [ -n "${VOLUMERIZE_SOURCE}" ]; then
+    ${DUPLICITY_COMMAND} collection-status $@ ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_TARGET} || DUPLICITY_RETURN_CODE=$? && true ;
+  elif [ ! -z "${1##*[!0-9]*}" ]; then
+    commandJob $@
+  elif [ -n "${JOB_COUNT}" ]; then
+    commandLoop $@
+  fi
+}
+
+commandExecution $@
+exit $DUPLICITY_RETURN_CODE

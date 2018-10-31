@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -o errexit
+
+strategy_path=""
+
+case $1 in
+    preAction ) strategy_path=/preexecute ;;
+    postAction ) strategy_path=/postexecute ;;
+    *) echo "Error: prepoststrategy first parameter 'execution phase' must be preAction or postAction"; exit 1 ;;
+esac
+
+case $2 in
+    backup | verify | restore ) ;;
+    *) echo "Error: porepoststrategy second parameter 'duplicity action' must be backup, verify or restore"; exit 1 ;;
+esac
+
+strategy_path=$strategy_path/$2
+
+if [ -d "$strategy_path" ]; then
+    for f in $strategy_path/*; do
+        case "$f" in
+            *.sh) echo "running $f"; . "$f" ;;
+            *)    echo "ignoring $f" ;;
+        esac
+        echo
+    done
+fi

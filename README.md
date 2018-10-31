@@ -1,11 +1,14 @@
 # Blacklabelops Volumerize
 
+[![Circle CI](https://circleci.com/gh/blacklabelops/volumerize.svg?style=shield)](https://circleci.com/gh/blacklabelops/volumerize)
 [![Open Issues](https://img.shields.io/github/issues/blacklabelops/volumerize.svg)](https://github.com/blacklabelops/volumerize/issues) [![Stars on GitHub](https://img.shields.io/github/stars/blacklabelops/volumerize.svg)](https://github.com/blacklabelops/volumerize/stargazers)
 [![Docker Stars](https://img.shields.io/docker/stars/blacklabelops/volumerize.svg)](https://hub.docker.com/r/blacklabelops/volumerize/) [![Docker Pulls](https://img.shields.io/docker/pulls/blacklabelops/volumerize.svg)](https://hub.docker.com/r/blacklabelops/volumerize/)
 
+[![Try in PWD](https://raw.githubusercontent.com/play-with-docker/stacks/master/assets/images/button.png)](https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/blacklabelops/volumerize/master/dc-pwd.yml)
+
 Blacklabelops backup and restore solution for Docker volume backups. It is based on the command line tool Duplicity. Dockerized and Parameterized for easier use and configuration.
 
-Always remember that this no wizard tool that can clone and backup data from running databases. You should always stop all containers running on your data before doing backups. Always make sure you're not victim of unexpected data corruption.
+This is not a tool that can clone and backup data from running databases. You should always stop all containers running on your data before doing backups. Always make sure you're not a victim of unexpected data corruption.
 
 Also note that the easier the tools the easier it is to lose data! Always make sure the tool works correct by checking the backup data itself, e.g. S3 bucket. Check the configuration double time and enable some check options this image offers. E.g. attaching volumes read only.
 
@@ -30,7 +33,7 @@ and many more: [Duplicity Supported Backends](http://duplicity.nongnu.org/index.
 
 Leave a message and ask questions on Hipchat: [blacklabelops/hipchat](http://support.blacklabelops.com)
 
-Maybe no one has ever told you, but munich developers run on beer! If you like my work, share a beer!
+Maybe no one has ever told you, but Munich developers run on beer! If you like my work, share a beer!
 
 [![BeerMe](https://raw.githubusercontent.com/ikkez/Beer-Donation-Button/gh-pages/img/beer_donation_button_single.png)](https://www.paypal.me/donateblacklabelops)
 
@@ -51,7 +54,7 @@ Google Drive: [Readme](https://github.com/blacklabelops/volumerize/tree/master/b
 You can make backups of your Docker application volume just by typing:
 
 ~~~~
-$ docker run -it --rm \
+$ docker run --rm \
     --name volumerize \
     -v yourvolume:/source:ro \
     -v backup_volume:/backup \
@@ -67,7 +70,7 @@ $ docker run -it --rm \
 
 The container has a default startup mode. Any specific behavior is done by defining envrionment variables at container startup (`docker run`). The default container behavior is to start in daemon mode and do incremental daily backups.
 
-You application data must be saved inside a Docker volume. You can list your volumes with the Docker command `docker volume ls`. You have to attach the volume to the backup container using the `-v` option. Choose an arbitrary name for the folder and add the `:ro`option to make the sources read only.
+Your application data must be saved inside a Docker volume. You can list your volumes with the Docker command `docker volume ls`. You have to attach the volume to the backup container using the `-v` option. Choose an arbitrary name for the folder and add the `:ro`option to make the sources read only.
 
 Example using Jenkins:
 
@@ -134,9 +137,9 @@ $ docker run -d \
 # Backup Restore
 
 A restore is simple. First stop your Volumerize container and start a another container with the same
-environment variables and the same volume but without read only mode! This is important in order to get the same directory structure as when you did your backup!
+environment variables and the same volume but without read-only mode! This is important in order to get the same directory structure as when you did your backup!
 
-Tip: Now add the read only option to your backup container!
+Tip: Now add the read-only option to your backup container!
 
 Example:
 
@@ -153,7 +156,7 @@ $ docker run -d \
     blacklabelops/volumerize
 ~~~~
 
-Then stop the backup container and restore with the following command. The only difference is that we exclude the read only option `:ro` from the source volume and added it to the backup volume:
+Then stop the backup container and restore with the following command. The only difference is that we exclude the read-only option `:ro` from the source volume and added it to the backup volume:
 
 ~~~~
 $ docker stop volumerize
@@ -168,6 +171,10 @@ $ docker start volumerize
 ~~~~
 
 > Triggers a once time restore. The container for executing the restore command will be deleted afterwards
+
+You can restore from a particular backup by adding a time parameter to the command `restore`. For example, using `restore -t 3D` at the end in the above command will restore a backup from 3 days ago. See [the Duplicity manual](http://duplicity.nongnu.org/duplicity.1.html#sect8) to view the accepted time formats.
+
+To see the available backups, use the command `list` before doing a `restore`.
 
 ## Dry run
 
@@ -197,7 +204,7 @@ $ docker run --rm \
 
 # Periodic Backups
 
-The default cron setting for this container is: `0 0 4 * * *`. That's four a clock in the morning UTC. You can set your own schedule with the environment variable `VOLUMERIZE_JOBBER_TIME`.
+The default cron setting for this container is: `0 0 4 * * *`. That's four o'clock in the morning UTC. You can set your own schedule with the environment variable `VOLUMERIZE_JOBBER_TIME`.
 
 You can set the time zone with the environment variable `TZ`.
 
@@ -211,14 +218,14 @@ $ docker run -d \
     -v jenkins_volume:/source:ro \
     -v backup_volume:/backup \
     -v cache_volume:/volumerize-cache \
-    -e "TZ=Europe/Berlin"
+    -e "TZ=Europe/Berlin" \
     -e "VOLUMERIZE_SOURCE=/source" \
     -e "VOLUMERIZE_TARGET=file:///backup" \
     -e "VOLUMERIZE_JOBBER_TIME=0 0 3 * * *" \
     blacklabelops/volumerize
 ~~~~
 
-> Backups three o'clock in the morning according to german local time.
+> Backups at three o'clock in the morning according to german local time.
 
 # Docker Container Restarts
 
@@ -385,7 +392,7 @@ The format is a number followed by one of the characters s, m, h, D, W, M, or Y.
 Examples:
 
 * After three Days: 3D
-* After one month: 1m
+* After one month: 1M
 * After 55 minutes: 55m
 
 Volumerize Example:
@@ -404,6 +411,8 @@ $ docker run -d \
 ~~~~
 
 > Will enforce a full backup after seven days.
+
+For the difference between a full and incremental backup, see [Duplicity's documentation](http://duplicity.nongnu.org/duplicity.1.html).
 
 # Post scripts and pre scripts (prepost strategies)
 
@@ -425,18 +434,20 @@ Some premade strategies are available at [prepost strategies](prepost_strategies
 # Container Scripts
 
 This image creates at container startup some convenience scripts.
+Under the hood blacklabelops/volumerize uses duplicity. To pass script parameters, see here for duplicity command line options: [Duplicity CLI Options](http://duplicity.nongnu.org/duplicity.1.html#sect5)
 
 | Script | Description |
 |--------|-------------|
 | backup | Creates an backup with the containers configuration |
 | backupFull | Creates a full backup with the containers configuration |
 | backupIncremental | Creates an incremental backup with the containers configuration |
+| list | List all available backups |
 | verify | Compare the latest backup to your local files |
 | restore | Be Careful! Triggers an immediate force restore with the latest backup |
 | periodicBackup | Same script that will be triggered by the periodic schedule |
 | startContainers | Starts the specified Docker containers |
 | stopContainers | Stops the specified Docker containers |
-| remove-older-than | Delete older backups |
+| remove-older-than | Delete older backups ([Time formats](http://duplicity.nongnu.org/duplicity.1.html#toc8))|
 | cleanCacheLocks | Cleanup of old Cache locks. |
 | prepoststrategy `$execution_phase` `$duplicity_action` | Execute all `.sh` files for the specified exeuction phase and duplicity action in alphabetical order. |
 
@@ -452,11 +463,7 @@ $ docker exec volumerize backup
 
 > Executes script `backup` inside container with name `volumerize`
 
-Passing script parameters:
-
-Under the hood blacklabelops/volumerize uses duplicity. See here for duplicity command line options: [Duplicity CLI Options](http://duplicity.nongnu.org/duplicity.1.html#sect5)
-
-Example:
+Example passing script parameter:
 
 ~~~~
 $ docker exec volumerize backup --dry-run
@@ -464,9 +471,57 @@ $ docker exec volumerize backup --dry-run
 
 > `--dry-run` will simulate not execute the backup procedure.
 
+
 # Build The Project
 
 Check out the project at Github.
+
+# Multiple Backups
+
+You can specify multiple backup jobs with one container with enumerated environment variables. Each environment variable must be followed by a number starting with 1. Example `VOLUMERIZE_SOURCE1`, `VOLUMERIZE_SOURCE2` or `VOLUMERIZE_SOURCE3`.
+
+The following environment variables can be enumerated:
+
+* VOLUMERIZE_SOURCE
+* VOLUMERIZE_TARGET
+* VOLUMERIZE_CACHE
+* VOLUMERIZE_INCLUDE
+
+When using multiple backup jobs you will have to specify a cache directory for each backup. The minimum required environment variables for each job is:
+
+* VOLUMERIZE_SOURCE
+* VOLUMERIZE_TARGET
+* VOLUMERIZE_CACHE
+
+Also the included helper scripts will change their behavior when you use enumerated environment variables. By default each script will run on all backup jobs.
+
+Example: Executing the script `backup` will backup all jobs.
+
+The first parameter of each script can be a job number, e.g. `1`, `2` or `3`.
+
+Example: Executing the script `backup 1` will only trigger backup on job 1.
+
+Full example for multiple job specifications:
+
+~~~~
+$ docker run -d \
+    --name volumerize \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v jenkins_volume:/source:ro \
+    -v jenkins_volume2:/source2:ro \
+    -v backup_volume:/backup \
+    -v backup_volume2:/backup2 \
+    -v cache_volume:/volumerize-cache \
+    -v cache_volume2:/volumerize-cache2 \
+    -e "VOLUMERIZE_CONTAINERS=jenkins jenkins2" \
+    -e "VOLUMERIZE_SOURCE1=/source" \
+    -e "VOLUMERIZE_TARGET1=file:///backup" \
+    -e "VOLUMERIZE_CACHE1=/volumerize-cache" \
+    -e "VOLUMERIZE_SOURCE2=/source2" \
+    -e "VOLUMERIZE_TARGET2=file:///backup2" \
+    -e "VOLUMERIZE_CACHE2=/volumerize-cache2" \
+    blacklabelops/volumerize
+~~~~
 
 ## Build the Image
 
