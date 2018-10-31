@@ -15,12 +15,12 @@ RUN apk upgrade --update && \
       curl-dev \
       tzdata \
       openssh \
-      openssl \
+      libressl-dev \
+      libressl \
       duply \
       ca-certificates \
       python-dev \
       libffi-dev \
-      openssl-dev \
       librsync-dev \
       gcc \
       alpine-sdk \
@@ -32,11 +32,11 @@ RUN apk upgrade --update && \
       librsync \
       librsync-dev \
       python2-dev \
+      duplicity \
       py-pip && \
     pip install --upgrade pip && \
     pip install \
       setuptools \
-      duplicity \
       fasteners \
       PyDrive \
       chardet \
@@ -113,8 +113,8 @@ RUN export JOBBER_HOME=/tmp/jobber && \
       wget \
       python-dev \
       libffi-dev \
-      openssl-dev \
-      openssl \
+      libressl-dev \
+      libressl \
       alpine-sdk \
       linux-headers \
       gcc \
