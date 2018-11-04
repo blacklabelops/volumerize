@@ -261,6 +261,41 @@ Test the routine!
 $ docker exec volumerize backup
 ~~~~
 
+### Additional Docker CLI API configurations
+> If the docker host version is earlier than 1.12 then include the following docker api setting, Volumerize uses docker CLI ver 1.12 which uses Docker API version 1.24. One needs to set the compatible API version of the docker host 
+ie. Docker host version 1.11 uses API 1.23
+
+~~~~
+docker version
+Client:
+ Version:      1.11.2
+ API version:  1.23
+ Go version:   go1.8
+ Git commit:   5be46ee-synology
+ Built:        Fri May 12 16:36:47 2017
+ OS/Arch:      linux/amd64
+
+Server:
+ Version:      1.11.2
+ API version:  1.23
+ Go version:   go1.8
+ Git commit:   5be46ee-synology
+ Built:        Fri May 12 16:36:47 2017
+ OS/Arch:      linux/amd64
+~~~~
+Then use  the following -e argument
+~~~~
+$ docker run -d \
+    --name volumerize \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    ...
+    ...
+    -e "DOCKER_API_VERSION=1.23" \
+    ...
+    ...
+    blacklabelops/volumerize
+~~~~
+### Additional Docker considerations
 Warning: Make sure your container is running under the correct restart policy. Tools like Docker, Docker-Compose, Docker-Swarm, Kubernetes and Cattle may restart the container even when Volumerize stops it. Backups done under running instances may end in corrupted backups and even corrupted data. Always make sure that the command `docker stop` really stops an instance and there will be no restart of the underlying deployment technology. You can test this by running `docker stop` and check with `docker ps` that the container is really stopped.
 
 # Duplicity Parameters
