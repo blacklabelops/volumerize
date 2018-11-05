@@ -8,14 +8,19 @@ ARG DUPLICITY_SERIES=0.7
 
 RUN apk upgrade --update && \
     apk add \
+      build-base \
+      glib-dev \
+      gmp-dev \
+      asciidoc \
+      curl-dev \
       tzdata \
       openssh \
-      openssl \
+      libressl-dev \
+      libressl \
       duply \
       ca-certificates \
       python-dev \
       libffi-dev \
-      openssl-dev \
       librsync-dev \
       gcc \
       alpine-sdk \
@@ -23,10 +28,15 @@ RUN apk upgrade --update && \
       musl-dev \
       rsync \
       lftp \
-      py-pip \
-      duplicity && \
+      py-cryptography \
+      librsync \
+      librsync-dev \
+      python2-dev \
+      duplicity \
+      py-pip && \
     pip install --upgrade pip && \
     pip install \
+      setuptools \
       fasteners \
       PyDrive \
       chardet \
@@ -88,6 +98,13 @@ RUN export JOBBER_HOME=/tmp/jobber && \
     echo "$DOCKER_SHA  /tmp/docker.tgz" | sha1sum -c - && \
 	  tar -xzvf /tmp/docker.tgz -C /tmp && \
 	  cp /tmp/docker/docker /usr/local/bin/ && \
+    # Install MEGAtools
+    curl -fSL "https://megatools.megous.com/builds/megatools-1.9.98.tar.gz" -o /tmp/megatools.tgz && \
+    tar -xzvf /tmp/megatools.tgz -C /tmp && \
+    cd /tmp/megatools-1.9.98 && \
+    ./configure && \
+    make && \
+    make install && \
     # Cleanup
     apk del \
       go \
@@ -96,8 +113,8 @@ RUN export JOBBER_HOME=/tmp/jobber && \
       wget \
       python-dev \
       libffi-dev \
-      openssl-dev \
-      openssl \
+      libressl-dev \
+      libressl \
       alpine-sdk \
       linux-headers \
       gcc \
