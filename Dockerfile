@@ -52,15 +52,15 @@ RUN apk upgrade --update && \
       urllib3 \
       b2 \
       dropbox==6.9.0 && \
-    mkdir -p /etc/volumerize /volumerize-cache /opt/volumerize
-RUN curl -fSL "https://code.launchpad.net/duplicity/${DUPLICITY_SERIES}-series/${DUPLICITY_VERSION}/+download/duplicity-${DUPLICITY_VERSION}.tar.gz" -o /tmp/duplicity.tar.gz && \
+    mkdir -p /etc/volumerize /volumerize-cache /opt/volumerize && \
+    curl -fSL "https://code.launchpad.net/duplicity/${DUPLICITY_SERIES}-series/${DUPLICITY_VERSION}/+download/duplicity-${DUPLICITY_VERSION}.tar.gz" -o /tmp/duplicity.tar.gz && \
     export DUPLICITY_SHA=7fb477b1bbbfe060daf130a5b0518a53b7c6e6705e5459c191fb44c8a723c9a5e2126db98544951ffb807a5de7e127168cba165a910f962ed055d74066f0faa5 && \
     echo 'Calculated checksum: '$(sha512sum /tmp/duplicity.tar.gz) && \
     # echo "$DUPLICITY_SHA  /tmp/duplicity.tar.gz" | sha512sum -c - && \
     tar -xzvf /tmp/duplicity.tar.gz -C /tmp && \
-    cd /tmp/duplicity-${DUPLICITY_VERSION} && python setup.py install
+    cd /tmp/duplicity-${DUPLICITY_VERSION} && python setup.py install && \
     # Install Jobber
-RUN export JOBBER_HOME=/tmp/jobber && \
+    export JOBBER_HOME=/tmp/jobber && \
     export JOBBER_LIB=$JOBBER_HOME/lib && \
     export GOPATH=$JOBBER_LIB && \
     export CONTAINER_UID=1000 && \
