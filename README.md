@@ -394,6 +394,11 @@ $ gpg2 --export-secret-keys --armor yourname@youremail.com > MyKey.asc
 
 > Note: Currently, this image only supports keys without passwords. The import routine is at fault, it would always prompt for passwords.
 
+You need to get the key id:
+```shell
+$ gpg -k yourname@youremail.com | head -n 2 | tail -n 1 | awk '{print $1}'
+```
+
 Example:
 
 ~~~~
@@ -406,6 +411,7 @@ $ docker run -d \
     -e "VOLUMERIZE_SOURCE=/source" \
     -e "VOLUMERIZE_TARGET=file:///backup" \
     -e "VOLUMERIZE_GPG_PRIVATE_KEY=/key/MyKey.asc" \
+    -e GPG_KEY_ID=<MyKeyID>
     -e "PASSPHRASE=" \
     blacklabelops/volumerize
 ~~~~
