@@ -21,7 +21,7 @@ function resolveOptions() {
     DUPLICITY_OPTIONS=$DUPLICITY_OPTIONS" --no-encryption"
   fi
   if [ -n "${GPG_KEY_ID}" ]; then
-    DUPLICITY_OPTIONS=$DUPLICITY_OPTIONS' --gpg-options "--trust-model always"'" --encrypt-key ${GPG_KEY_ID}"
+    DUPLICITY_OPTIONS=$DUPLICITY_OPTIONS" --gpg-options --trust-model=always --encrypt-key ${GPG_KEY_ID}"
   fi
   if [ -n "${VOLUMERIZE_FULL_IF_OLDER_THAN}" ]; then
     DUPLICITY_OPTIONS=$DUPLICITY_OPTIONS" --full-if-older-than ${VOLUMERIZE_FULL_IF_OLDER_THAN}"
@@ -81,7 +81,7 @@ function prepareJobCommand() {
     DUPLICITY_JOB_OPTIONS=$DUPLICITY_JOB_OPTIONS" --no-encryption"
   fi
   if [ -n "${GPG_KEY_ID}" ]; then
-    DUPLICITY_JOB_OPTIONS=$DUPLICITY_JOB_OPTIONS' --gpg-options "--trust-model always"'" --encrypt-key ${GPG_KEY_ID}"
+    DUPLICITY_JOB_OPTIONS=$DUPLICITY_JOB_OPTIONS" --gpg-options --trust-model=always --encrypt-key ${GPG_KEY_ID}"
   fi
   if [ -n "${VOLUMERIZE_FULL_IF_OLDER_THAN}" ]; then
     DUPLICITY_JOB_OPTIONS=$DUPLICITY_JOB_OPTIONS" --full-if-older-than ${VOLUMERIZE_FULL_IF_OLDER_THAN}"
