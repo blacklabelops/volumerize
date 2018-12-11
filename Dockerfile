@@ -1,7 +1,7 @@
 FROM blacklabelops/alpine:3.8
 MAINTAINER Steffen Bleul <sbl@blacklabelops.com>
 
-ARG JOBBER_VERSION=1.1
+ARG JOBBER_VERSION=1.3.4
 ARG DOCKER_VERSION=1.12.2
 ARG DUPLICITY_VERSION=0.7.18.2
 ARG DUPLICITY_SERIES=0.7
@@ -60,9 +60,6 @@ RUN apk upgrade --update && \
     tar -xzvf /tmp/duplicity.tar.gz -C /tmp && \
     cd /tmp/duplicity-${DUPLICITY_VERSION} && python setup.py install && \
     # Install Jobber
-    export JOBBER_HOME=/tmp/jobber && \
-    export JOBBER_LIB=$JOBBER_HOME/lib && \
-    export GOPATH=$JOBBER_LIB && \
     export CONTAINER_UID=1000 && \
     export CONTAINER_GID=1000 && \
     export CONTAINER_USER=jobber_client && \
@@ -74,23 +71,11 @@ RUN apk upgrade --update && \
       curl \
       wget \
       make && \
-    mkdir -p $JOBBER_HOME && \
-    mkdir -p $JOBBER_LIB && \
     # Install Jobber
     addgroup -g $CONTAINER_GID jobber_client && \
     adduser -u $CONTAINER_UID -G jobber_client -s /bin/bash -S jobber_client && \
-    cd $JOBBER_LIB && \
-    go get github.com/dshearer/jobber;true && \
-    if  [ "${JOBBER_VERSION}" != "latest" ]; \
-      then \
-        # wget --directory-prefix=/tmp https://github.com/dshearer/jobber/releases/download/v1.1/jobber-${JOBBER_VERSION}-r0.x86_64.apk && \
-        # apk add --allow-untrusted /tmp/jobber-${JOBBER_VERSION}-r0.x86_64.apk ; \
-        cd src/github.com/dshearer/jobber && \
-        git checkout tags/v${JOBBER_VERSION} && \
-        cd $JOBBER_LIB ; \
-    fi && \
-    make -C src/github.com/dshearer/jobber install DESTDIR=$JOBBER_HOME && \
-    cp $JOBBER_LIB/bin/* /usr/bin && \
+    wget --directory-prefix=/tmp https://github.com/dshearer/jobber/releases/download/v${JOBBER_VERSION}/jobber-${JOBBER_VERSION}-r0.apk && \
+    apk add --allow-untrusted --no-scripts /tmp/jobber-${JOBBER_VERSION}-r0.apk && \
     # Install Docker CLI
     curl -fSL "https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz" -o /tmp/docker.tgz && \
     export DOCKER_SHA=43b2479764ecb367ed169076a33e83f99a14dc85 && \
