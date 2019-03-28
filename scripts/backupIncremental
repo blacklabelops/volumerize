@@ -43,5 +43,6 @@ ${VOLUMERIZE_SCRIPT_DIR}/prepoststrategy preAction backup
 source ${VOLUMERIZE_SCRIPT_DIR}/stopContainers.sh
 commandExecution $@
 source ${VOLUMERIZE_SCRIPT_DIR}/startContainers.sh
+export DUPLICITY_RETURN_CODE
 ${VOLUMERIZE_SCRIPT_DIR}/prepoststrategy postAction backup
 exit $DUPLICITY_RETURN_CODE
