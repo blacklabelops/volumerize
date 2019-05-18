@@ -38,8 +38,6 @@ jobs:
               py-pip \
               curl \
               curl-dev
-            pip install \
-              docker-compose
       - run:
           name: Build Docker Release Images
           command: |
