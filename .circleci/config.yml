@@ -14,8 +14,6 @@ jobs:
               py-pip \
               curl \
               curl-dev
-            pip install \
-              docker-compose
       - run:
           name: Build Branch Images
           command: |
