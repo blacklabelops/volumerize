@@ -1,4 +1,4 @@
-FROM blacklabelops/alpine:3.8
+FROM alpine:20190508
 MAINTAINER Steffen Bleul <sbl@blacklabelops.com>
 
 ARG JOBBER_VERSION=1.3.4
@@ -8,6 +8,15 @@ ARG DUPLICITY_SERIES=0.7
 
 RUN apk upgrade --update && \
     apk add \
+      bash \
+      tzdata \
+      vim \
+      tini \
+      su-exec \
+      gzip \
+      tar \
+      wget \
+      curl \
       build-base \
       glib-dev \
       gmp-dev \
