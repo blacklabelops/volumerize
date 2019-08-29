@@ -14,7 +14,7 @@ function commandLoop() {
 
   for (( counter=1; counter<=$jobcount; counter++ ))
   do
-    commandJob "$counter" $@
+    commandJob "$counter" "$@"
   done
 }
 
@@ -23,7 +23,7 @@ function commandJob() {
   local returnCode=0;
   prepareJob "$jobNumber"
   shift;
-  ${DUPLICITY_JOB_COMMAND} cleanup $@ ${DUPLICITY_JOB_OPTIONS} ${VOLUMERIZE_JOB_INCUDES} ${VOLUMERIZE_JOB_TARGET} || returnCode=$? && true ;
+  ${DUPLICITY_JOB_COMMAND} cleanup "$@" ${DUPLICITY_JOB_OPTIONS} ${VOLUMERIZE_JOB_INCUDES} ${VOLUMERIZE_JOB_TARGET} || returnCode=$? && true ;
   if [ "$returnCode" -gt "$DUPLICITY_RETURN_CODE" ]; then
     DUPLICITY_RETURN_CODE=$returnCode
   fi
@@ -31,13 +31,13 @@ function commandJob() {
 
 function commandExecution() {
   if [ -n "${VOLUMERIZE_SOURCE}" ]; then
-    ${DUPLICITY_COMMAND} cleanup $@ ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_TARGET}  || DUPLICITY_RETURN_CODE=$? && true ;
+    ${DUPLICITY_COMMAND} cleanup "$@" ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_TARGET}  || DUPLICITY_RETURN_CODE=$? && true ;
   elif [ ! -z "${1##*[!0-9]*}" ]; then
-    commandJob $@
+    commandJob "$@"
   elif [ -n "${JOB_COUNT}" ]; then
-    commandLoop $@
+    commandLoop "$@"
   fi
 }
 
-commandExecution $@
+commandExecution "$@"
 exit $DUPLICITY_RETURN_CODE
