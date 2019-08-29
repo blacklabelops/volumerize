@@ -53,6 +53,7 @@ RUN apk upgrade --update && \
       boto \
       lockfile \
       paramiko \
+      pexpect \
       pycryptopp \
       python-keystoneclient \
       python-swiftclient \
