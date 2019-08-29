@@ -39,7 +39,7 @@ function resolveIncludes() {
     if [ ! -n "${!VOLUMERIZE_INCLUDE}" ]; then
       break
     fi
-    VOLUMERIZE_INCUDES=$VOLUMERIZE_INCLUDES" --include "${!VOLUMERIZE_INCLUDE}
+    VOLUMERIZE_INCLUDES=$VOLUMERIZE_INCLUDES" --include "${!VOLUMERIZE_INCLUDE}
   done
 }
 
@@ -62,7 +62,7 @@ DUPLICITY_JOB_COMMAND=
 DUPLICITY_JOB_OPTIONS=
 VOLUMERIZE_JOB_SOURCE=
 VOLUMERIZE_JOB_TARGET=
-VOLUMERIZE_JOB_INCUDES=
+VOLUMERIZE_JOB_INCLUDES=
 
 function prepareJobCommand() {
   local jobNumber=$1
@@ -112,14 +112,14 @@ function resolveJobIncludes() {
   local jobNumber=$1
   local x
   local VARIABLE_INCLUDE
-  VOLUMERIZE_JOB_INCUDES=
+  VOLUMERIZE_JOB_INCLUDES=
   for (( x=1; ; x++ ))
   do
     VARIABLE_INCLUDE="VOLUMERIZE_INCLUDE${jobNumber}_${x}"
     if [ ! -n "${!VARIABLE_INCLUDE}" ]; then
       break
     fi
-    VOLUMERIZE_JOB_INCUDES=$VOLUMERIZE_JOB_INCUDES" --include "${!VARIABLE_INCLUDE}
+    VOLUMERIZE_JOB_INCLUDES=$VOLUMERIZE_JOB_INCLUDES" --include "${!VARIABLE_INCLUDE}
   done
 }
 

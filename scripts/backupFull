@@ -23,7 +23,7 @@ function commandJob() {
   local returnCode=0;
   prepareJob "$jobNumber"
   shift;
-  ${DUPLICITY_JOB_COMMAND} full $@ ${DUPLICITY_JOB_OPTIONS} ${VOLUMERIZE_JOB_INCUDES} ${VOLUMERIZE_JOB_SOURCE} ${VOLUMERIZE_JOB_TARGET} || returnCode=$? && true ;
+  ${DUPLICITY_JOB_COMMAND} full $@ ${DUPLICITY_JOB_OPTIONS} ${VOLUMERIZE_JOB_INCLUDES} ${VOLUMERIZE_JOB_SOURCE} ${VOLUMERIZE_JOB_TARGET} || returnCode=$? && true ;
   if [ "$returnCode" -gt "$DUPLICITY_RETURN_CODE" ]; then
     DUPLICITY_RETURN_CODE=$returnCode
   fi
@@ -31,7 +31,7 @@ function commandJob() {
 
 function commandExecution() {
   if [ -n "${VOLUMERIZE_SOURCE}" ]; then
-    ${DUPLICITY_COMMAND} full $@ ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCUDES} ${VOLUMERIZE_SOURCE} ${VOLUMERIZE_TARGET} || DUPLICITY_RETURN_CODE=$? && true ;
+    ${DUPLICITY_COMMAND} full $@ ${DUPLICITY_OPTIONS} ${VOLUMERIZE_INCLUDES} ${VOLUMERIZE_SOURCE} ${VOLUMERIZE_TARGET} || DUPLICITY_RETURN_CODE=$? && true ;
   elif [ ! -z "${1##*[!0-9]*}" ]; then
     commandJob $@
   elif [ -n "${JOB_COUNT}" ]; then
