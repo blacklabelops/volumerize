@@ -1,10 +1,10 @@
-FROM alpine:20190508
+FROM alpine:3.12.0
 MAINTAINER Steffen Bleul <sbl@blacklabelops.com>
 
 ARG JOBBER_VERSION=1.3.4
 ARG DOCKER_VERSION=1.12.2
-ARG DUPLICITY_VERSION=0.7.18.2
-ARG DUPLICITY_SERIES=0.7
+ARG DUPLICITY_VERSION=0.8.15
+ARG DUPLICITY_SERIES=0.8
 
 RUN apk upgrade --update && \
     apk add \
@@ -28,7 +28,6 @@ RUN apk upgrade --update && \
       libressl \
       duply \
       ca-certificates \
-      python-dev \
       libffi-dev \
       librsync-dev \
       gcc \
@@ -40,34 +39,34 @@ RUN apk upgrade --update && \
       py-cryptography \
       librsync \
       librsync-dev \
-      python2-dev \
+      python3-dev \
       duplicity \
-      py-pip && \
+      py3-pip && \
     pip install --upgrade pip && \
     pip install \
       setuptools \
       fasteners \
       PyDrive \
       chardet \
-      azure-storage \
+      azure-storage-blob \
+      azure-storage-queue \
       boto \
       lockfile \
       paramiko \
-      pycryptopp \
       python-keystoneclient \
       python-swiftclient \
-      requests==2.14.2 \
+      requests \
       requests_oauthlib \
       urllib3 \
       b2 \
-      dropbox==6.9.0 && \
+      dropbox && \
     mkdir -p /etc/volumerize /volumerize-cache /opt/volumerize && \
     curl -fSL "https://code.launchpad.net/duplicity/${DUPLICITY_SERIES}-series/${DUPLICITY_VERSION}/+download/duplicity-${DUPLICITY_VERSION}.tar.gz" -o /tmp/duplicity.tar.gz && \
-    export DUPLICITY_SHA=7fb477b1bbbfe060daf130a5b0518a53b7c6e6705e5459c191fb44c8a723c9a5e2126db98544951ffb807a5de7e127168cba165a910f962ed055d74066f0faa5 && \
+    export DUPLICITY_SHA=2d048377c839ae56fc2828997c9aa7ba8c339e815e1e2ae738652037508ec276a2c72583687da34408fadd4839011e242b51bc73cca954227fc51db5683c258c && \
     echo 'Calculated checksum: '$(sha512sum /tmp/duplicity.tar.gz) && \
     # echo "$DUPLICITY_SHA  /tmp/duplicity.tar.gz" | sha512sum -c - && \
     tar -xzvf /tmp/duplicity.tar.gz -C /tmp && \
-    cd /tmp/duplicity-${DUPLICITY_VERSION} && python setup.py install && \
+    cd /tmp/duplicity-${DUPLICITY_VERSION} && python3 setup.py install && \
     # Install Jobber
     export CONTAINER_UID=1000 && \
     export CONTAINER_GID=1000 && \
@@ -93,9 +92,9 @@ RUN apk upgrade --update && \
 	  tar -xzvf /tmp/docker.tgz -C /tmp && \
 	  cp /tmp/docker/docker /usr/local/bin/ && \
     # Install MEGAtools
-    curl -fSL "https://megatools.megous.com/builds/megatools-1.9.98.tar.gz" -o /tmp/megatools.tgz && \
+    curl -fSL "https://megatools.megous.com/builds/megatools-1.10.3.tar.gz" -o /tmp/megatools.tgz && \
     tar -xzvf /tmp/megatools.tgz -C /tmp && \
-    cd /tmp/megatools-1.9.98 && \
+    cd /tmp/megatools-1.10.3 && \
     ./configure && \
     make && \
     make install && \
@@ -105,7 +104,7 @@ RUN apk upgrade --update && \
       git \
       curl \
       wget \
-      python-dev \
+      python3-dev \
       libffi-dev \
       libressl-dev \
       libressl \
