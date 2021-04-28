@@ -46,6 +46,7 @@ RUN apk upgrade --update && \
     pip install \
       setuptools \
       fasteners \
+      google-api-python-client>=2.2.0 \
       PyDrive \
       chardet \
       azure-storage-blob \
@@ -60,7 +61,6 @@ RUN apk upgrade --update && \
       urllib3 \
       b2 \
       dropbox && \
-    pip install --upgrade google-api-python-client && \
     mkdir -p /etc/volumerize /volumerize-cache /opt/volumerize && \
     curl -fSL "https://code.launchpad.net/duplicity/${DUPLICITY_SERIES}-series/${DUPLICITY_VERSION}/+download/duplicity-${DUPLICITY_VERSION}.tar.gz" -o /tmp/duplicity.tar.gz && \
     export DUPLICITY_SHA=2d048377c839ae56fc2828997c9aa7ba8c339e815e1e2ae738652037508ec276a2c72583687da34408fadd4839011e242b51bc73cca954227fc51db5683c258c && \
