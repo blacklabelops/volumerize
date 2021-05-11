@@ -1,9 +1,9 @@
-FROM alpine:3.12.0
+FROM alpine:3.13.5
 MAINTAINER Steffen Bleul <sbl@blacklabelops.com>
 
-ARG JOBBER_VERSION=1.3.4
-ARG DOCKER_VERSION=1.12.2
-ARG DUPLICITY_VERSION=0.8.15
+ARG JOBBER_VERSION=1.4.4
+ARG DOCKER_VERSION=20.10.6
+ARG DUPLICITY_VERSION=0.8.19
 ARG DUPLICITY_SERIES=0.8
 
 RUN apk upgrade --update && \
@@ -86,8 +86,8 @@ RUN apk upgrade --update && \
     wget --directory-prefix=/tmp https://github.com/dshearer/jobber/releases/download/v${JOBBER_VERSION}/jobber-${JOBBER_VERSION}-r0.apk && \
     apk add --allow-untrusted --no-scripts /tmp/jobber-${JOBBER_VERSION}-r0.apk && \
     # Install Docker CLI
-    curl -fSL "https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz" -o /tmp/docker.tgz && \
-    export DOCKER_SHA=43b2479764ecb367ed169076a33e83f99a14dc85 && \
+    curl -fSL "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz" -o /tmp/docker.tgz && \
+    export DOCKER_SHA=3aab01ab17734866df8b98938243f3f4c835592c && \
     echo 'Calculated checksum: '$(sha1sum /tmp/docker.tgz) && \
     echo "$DOCKER_SHA  /tmp/docker.tgz" | sha1sum -c - && \
 	  tar -xzvf /tmp/docker.tgz -C /tmp && \
