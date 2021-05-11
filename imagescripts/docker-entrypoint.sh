@@ -36,9 +36,12 @@ if [ -n "${VOLUMERIZE_DELAYED_START}" ]; then
   sleep ${VOLUMERIZE_DELAYED_START}
 fi
 
-if [ -n "${VOLUMERIZE_SOURCE}" ]; then
-  source $CUR_DIR/create_jobber.sh
+if [ -n "${GOOGLE_DRIVE_ID}" ]; then
   source $CUR_DIR/create_gdocs_file.sh
+fi
+
+if [ -n "${VOLUMERIZE_JOBBER_TIME}" ]; then
+  source $CUR_DIR/create_jobber.sh
 fi
 
 if [ "$1" = 'volumerize' ]; then
