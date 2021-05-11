@@ -46,6 +46,7 @@ RUN apk upgrade --update && \
     pip install \
       setuptools \
       fasteners \
+      google-api-python-client>=2.2.0 \
       PyDrive \
       chardet \
       azure-storage-blob \
