@@ -41,6 +41,8 @@ Dropbox: [Readme](https://github.com/blacklabelops/volumerize/tree/master/backen
 
 Google Drive: [Readme](https://github.com/blacklabelops/volumerize/tree/master/backends/GoogleDrive)
 
+Mega: [Readme](https://github.com/blacklabelops/volumerize/tree/master/backends/Mega)
+
 # Make It Short
 
 You can make backups of your Docker application volume just by typing:
