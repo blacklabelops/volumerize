@@ -164,7 +164,7 @@ $ docker start volumerize
 
 > Triggers a once time restore. The container for executing the restore command will be deleted afterwards
 
-You can restore from a particular backup by adding a time parameter to the command `restore`. For example, using `restore -t 3D` at the end in the above command will restore a backup from 3 days ago. See [the Duplicity manual](http://duplicity.nongnu.org/duplicity.1.html#sect8) to view the accepted time formats.
+You can restore from a particular backup by adding a time parameter to the command `restore`. For example, using `restore -t 3D` at the end in the above command will restore a backup from 3 days ago. See [the Duplicity manual](http://duplicity.nongnu.org/vers7/duplicity.1.html#sect8) to view the accepted time formats.
 
 To see the available backups, use the command `list` before doing a `restore`.
 
@@ -292,7 +292,7 @@ Warning: Make sure your container is running under the correct restart policy. T
 
 # Duplicity Parameters
 
-Under the hood blacklabelops/volumerize uses duplicity. See here for duplicity command line options: [Duplicity CLI Options](http://duplicity.nongnu.org/duplicity.1.html#sect5)
+Under the hood blacklabelops/volumerize uses duplicity. See here for duplicity command line options: [Duplicity CLI Options](http://duplicity.nongnu.org/vers7/duplicity.1.html#sect5)
 
 You can pass duplicity options inside Volumerize. Duplicity options will be passed by the environment-variable `VOLUMERIZE_DUPLICITY_OPTIONS`. The options will be added to all blacklabelops/volumerize commands and scripts. E.g. the option `--dry-run` will put the whole container in demo mode as all duplicity commands will only be simulated.
 
@@ -445,7 +445,7 @@ $ docker run -d \
 
 > Will enforce a full backup after seven days.
 
-For the difference between a full and incremental backup, see [Duplicity's documentation](http://duplicity.nongnu.org/duplicity.1.html).
+For the difference between a full and incremental backup, see [Duplicity's documentation](http://duplicity.nongnu.org/vers7/duplicity.1.html).
 
 # Post scripts and pre scripts (prepost strategies)
 
@@ -467,7 +467,7 @@ Some premade strategies are available at [prepost strategies](prepost_strategies
 # Container Scripts
 
 This image creates at container startup some convenience scripts.
-Under the hood blacklabelops/volumerize uses duplicity. To pass script parameters, see here for duplicity command line options: [Duplicity CLI Options](http://duplicity.nongnu.org/duplicity.1.html#sect5)
+Under the hood blacklabelops/volumerize uses duplicity. To pass script parameters, see here for duplicity command line options: [Duplicity CLI Options](http://duplicity.nongnu.org/vers7/duplicity.1.html#sect5)
 
 | Script | Description |
 |--------|-------------|
@@ -480,7 +480,7 @@ Under the hood blacklabelops/volumerize uses duplicity. To pass script parameter
 | periodicBackup | Same script that will be triggered by the periodic schedule |
 | startContainers | Starts the specified Docker containers |
 | stopContainers | Stops the specified Docker containers |
-| remove-older-than | Delete older backups ([Time formats](http://duplicity.nongnu.org/duplicity.1.html#toc8))|
+| remove-older-than | Delete older backups ([Time formats](http://duplicity.nongnu.org/vers7/duplicity.1.html#sect8))|
 | cleanCacheLocks | Cleanup of old Cache locks. |
 | prepoststrategy `$execution_phase` `$duplicity_action` | Execute all `.sh` files for the specified exeuction phase and duplicity action in alphabetical order. |
 
