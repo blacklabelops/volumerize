@@ -1,3 +1,40 @@
+FROM alpine:3.13.5 as megacmd-compiler
+
+RUN apk add --repository https://dl-cdn.alpinelinux.org/alpine/edge/testing --update \
+      libtool \
+      autoconf \
+      automake \
+      c-ares-dev \
+      crypto++-dev \
+      curl \
+      curl-dev \
+      file \
+      g++ \
+      gcc \
+      git \
+      sqlite-dev \
+      pcre-dev \
+      libc-dev \
+      libffi-dev \
+      libressl-dev \
+      libsodium \
+      libsodium-dev \
+      libuv-dev \
+      make \
+      openssl \
+      openssl-dev \
+      readline-dev \
+      zlib-dev \
+      freeimage-dev && \
+    git clone https://github.com/meganz/MEGAcmd.git /opt/MEGAcmd && \
+    cd /opt/MEGAcmd && \
+    git submodule update --init --recursive && \
+    sh autogen.sh && \
+    ./configure && \
+    make -j $(nproc) && \
+    make install
+
+
 FROM alpine:3.13.5
 MAINTAINER Steffen Bleul <sbl@blacklabelops.com>
 
@@ -5,6 +42,9 @@ ARG JOBBER_VERSION=1.4.4
 ARG DOCKER_VERSION=20.10.6
 ARG DUPLICITY_VERSION=0.8.19
 ARG DUPLICITY_SERIES=0.8
+
+COPY --from=megacmd-compiler /usr/local/bin/mega-* /usr/local/bin/
+COPY --from=megacmd-compiler /usr/local/lib/libmega* /usr/local/lib/
 
 RUN apk upgrade --update && \
     apk add \
@@ -99,6 +139,24 @@ RUN apk upgrade --update && \
     ./configure && \
     make && \
     make install && \
+    # Install MegaCMD dependencies
+    apk add --repository https://dl-cdn.alpinelinux.org/alpine/edge/testing --update --no-cache \
+      c-ares \
+      crypto++ \
+      libcurl \
+      libtool \
+      libuv \
+      libpcrecpp \
+      libsodium \
+      sqlite-libs \
+      sqlite \
+      pcre \
+      readline \
+      freeimage \
+      zlib && \
+    # Test MegaCMD binaries
+    find /usr/local/bin -type f -executable -name 'mega-*' | \
+      while read binary; do command -v $binary > /dev/null; done && \
     # Cleanup
     apk del \
       go \
