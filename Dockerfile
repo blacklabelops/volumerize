@@ -100,6 +100,7 @@ RUN apk upgrade --update && \
       requests_oauthlib \
       urllib3 \
       b2 \
+      b2sdk \
       dropbox && \
     mkdir -p /etc/volumerize /volumerize-cache /opt/volumerize && \
     curl -fSL "https://code.launchpad.net/duplicity/${DUPLICITY_SERIES}-series/${DUPLICITY_VERSION}/+download/duplicity-${DUPLICITY_VERSION}.tar.gz" -o /tmp/duplicity.tar.gz && \
