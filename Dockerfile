@@ -40,7 +40,7 @@ MAINTAINER Steffen Bleul <sbl@blacklabelops.com>
 
 ARG JOBBER_VERSION=1.4.4
 ARG DOCKER_VERSION=20.10.6
-ARG DUPLICITY_VERSION=0.8.19
+ARG DUPLICITY_VERSION=0.8.21
 ARG DUPLICITY_SERIES=0.8
 
 COPY --from=megacmd-compiler /usr/local/bin/mega-* /usr/local/bin/
