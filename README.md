@@ -198,7 +198,7 @@ $ docker run --rm \
 
 # Periodic Backups
 
-The default cron setting for this container is: `0 0 4 * * *`. That's four o'clock in the morning UTC. You can set your own schedule with the environment variable `VOLUMERIZE_JOBBER_TIME`.
+By default no periodic backup job is created. You can set your own schedule with the environment variable `VOLUMERIZE_JOBBER_TIME`.
 
 You can set the time zone with the environment variable `TZ`.
 
@@ -220,6 +220,12 @@ $ docker run -d \
 ~~~~
 
 > Backups at three o'clock in the morning according to german local time.
+
+If you would like to validate your job, you can list all active jobs using `docker exec volumerize jobber list`
+~~~~
+NAME                 STATUS  SEC/MIN/HR/MDAY/MTH/WDAY  NEXT RUN TIME               NOTIFY ON SUCCESS  NOTIFY ON ERR  NOTIFY ON FAIL  ERR HANDLER
+VolumerizeBackupJob  Good    0 0 4 * * *               Sep 14 04:00:00 +0200 CEST                                                    Continue
+~~~~
 
 # Docker Container Restarts
 
